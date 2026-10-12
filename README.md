@@ -12,12 +12,15 @@ Needs macOS 26 and Xcode 26.
 | Part | What it does |
 | --- | --- |
 | Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`), text (`.textDisplay`, `.textTitle` …), status colors (`.success`, `.warning`, `.danger`). Views use these names, never raw values. |
-| Surfaces | `.panelSurface()`, `.controlSurface()`, `.contentSurface()`: the only place that decides where glass is used. |
+| Surfaces | `.panelSurface()`, `.controlSurface(selected:)`, `.contentSurface()`: the only place that decides where glass is used. `.controlBackdrop(.image)` for controls over a photo or video. |
+| Controls | `.pill()`, `.buttonStyle(.pill)`, `.pillIcon`: one shape and height (`.controlHeight`) for buttons, menus and text fields. |
 | `FloatingPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. |
+| `OverlayPanel` | A panel that never takes focus: thumbnails, toasts, previews. |
+| `AppWindows` | `show(window)`: an app window centered, in front of all apps, with a Dock icon while open. `activate()`: take focus before an alert or a save panel. |
 | `GlobalShortcut`, `ShortcutRecorder` | System-wide shortcuts the user can change in Settings. Hyper (all four modifiers) shows as ✦. |
-| `Toast`, `KeyCap` | A short confirmation; key caps for hints. |
-| `SettingsWindow`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `LaunchAtLoginToggle` | The standard Settings window and its rows. |
-| `MenuBarItem`, `AppMenuItems`, `GearMenu` | The menu bar icon (survives being hidden in System Settings) and Settings… / Quit in the app's own UI. |
+| `Toast`, `ToastPanel`, `KeyCap` | A short confirmation, in a view or at a point on screen; key caps for hints. |
+| `SettingsWindow`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `AboutRow`, `LaunchAtLoginToggle` | The standard Settings window and its rows. |
+| `MenuBarItem`, `AppMenuItems`, `GearMenu`, `Shortcut.menuShortcut` | The menu bar icon (survives being hidden in System Settings), Settings… / Quit in the app's own UI, and a global shortcut shown in a menu. |
 | `scripts/make-icon.swift` | Writes an Icon Composer app icon: a gradient and one SF Symbol. |
 | `lint/`, `.swift-format` | The shared SwiftLint rules (including the token rules) and the swift-format config. |
 
@@ -26,7 +29,7 @@ Each app keeps its brand color in its own `Color.brand` and passes it as `tint:`
 ## Use it in an app
 
 ```swift
-.package(url: "https://github.com/sitek94/mykit", from: "0.1.0")
+.package(url: "https://github.com/sitek94/mykit", from: "0.3.0")
 ```
 
 Then copy the lint config at the same version:

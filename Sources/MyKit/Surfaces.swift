@@ -29,6 +29,13 @@ extension EnvironmentValues {
     @Entry public var controlBackdrop: ControlBackdrop = .panel
 }
 
+extension View {
+    /// What the controls inside sit on: `.image` for controls over a photo or video.
+    public func controlBackdrop(_ backdrop: ControlBackdrop) -> some View {
+        environment(\.controlBackdrop, backdrop)
+    }
+}
+
 private struct ControlSurface: ViewModifier {
     let selected: Bool
     @Environment(\.controlBackdrop) private var backdrop

@@ -11,17 +11,20 @@ public enum AppWindows {
     /// Time for the status menu to close before the app activates.
     static let delay: Duration = .milliseconds(100)
     private static var open: [ObjectIdentifier: NSObjectProtocol] = [:]
+    private static var sized: Set<ObjectIdentifier> = []
 
+    /// A window hidden with `orderOut` instead of closed keeps the Dock icon: close it.
     public static func show(_ window: NSWindow) {
         // A new hosted window gets its SwiftUI size later: size it first, or `center()` centers a zero-size window,
-        // which then grows to the right and down.
-        if let content = window.contentViewController?.view {
+        // which then grows to the right and down. Only once: a window shown again keeps the size the user gave it.
+        if sized.insert(ObjectIdentifier(window)).inserted, let content = window.contentViewController?.view {
             window.setContentSize(content.fittingSize)
         }
         window.center()
+        // Tracked at once, so a close just before this show cannot remove the Dock icon in between.
+        track(window)
         Task {
             try? await Task.sleep(for: delay)
-            track(window)
             activate()
             window.makeKeyAndOrderFront(nil)
             NSApp.setActivationPolicy(.regular)
@@ -36,6 +39,10 @@ public enum AppWindows {
     public static func activate() {
         typealias Activate = @convention(c) (AnyObject, Selector, Bool) -> Void
         let selector = NSSelectorFromString("activateIgnoringOtherApps:")
+        guard NSApp.responds(to: selector) else {
+            NSApp.activate()
+            return
+        }
         unsafeBitCast(NSApp.method(for: selector), to: Activate.self)(NSApp, selector, true)
     }
 

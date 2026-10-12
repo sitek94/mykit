@@ -1,7 +1,8 @@
 import AppKit
 import SwiftUI
 
-/// Shows a `Toast` at a point on screen without taking focus or clicks, for apps without a window of their own.
+/// Shows a `Toast` at a point on screen without taking focus, for apps without a window of their own. It takes clicks
+/// only when it is a warning or has an action.
 @MainActor
 public enum ToastPanel {
     /// The app's brand color. A hosted view does not inherit the app's tint.
@@ -13,6 +14,8 @@ public enum ToastPanel {
         hideTask?.cancel()
         guard let panel else { return }
         self.panel = nil
+        // A click on a fading toast would run its old action and hide the next toast.
+        panel.ignoresMouseEvents = true
         fade(panel, to: 0) { panel.orderOut(nil) }
     }
 
@@ -51,7 +54,7 @@ public enum ToastPanel {
         }
     }
 
-    /// Fades in and out instead of a hard cut (the `.standard` motion token's duration).
+    /// Fades in and out instead of a hard cut.
     private static func fade(_ panel: NSPanel, to alpha: CGFloat, then done: @escaping @MainActor () -> Void = {}) {
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2

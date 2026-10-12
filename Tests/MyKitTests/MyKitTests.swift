@@ -22,14 +22,19 @@ struct ShortcutTests {
         #expect(shortcut.modifierFlags == .command)
     }
 
-    @Test func menuShortcutKeepsTheKeyAndModifiers() {
-        let shortcut = Shortcut(keyCode: kVK_ANSI_A, modifiers: [.control, .shift, .command]).menuShortcut
-        #expect(shortcut?.key == KeyEquivalent("a"))
-        #expect(shortcut?.modifiers == [.control, .shift, .command])
+    @Test func menuShortcutKeepsTheKeyAndModifiers() throws {
+        let global = Shortcut(keyCode: kVK_ANSI_A, modifiers: [.control, .shift, .command])
+        // The letter depends on the keyboard layout (A on US, Q on AZERTY).
+        let letter = try #require(global.keys.last?.lowercased().first)
+        #expect(global.menuShortcut?.key == KeyEquivalent(letter))
+        #expect(global.menuShortcut?.modifiers == [.control, .shift, .command])
     }
 
-    @Test func menuShortcutIsNilForANamedKey() {
-        #expect(Shortcut(keyCode: kVK_Space, modifiers: .command).menuShortcut == nil)
+    @Test func menuShortcutShowsNamedKeys() {
+        #expect(Shortcut(keyCode: kVK_Space, modifiers: .command).menuShortcut?.key == .space)
+        #expect(Shortcut(keyCode: kVK_LeftArrow, modifiers: .command).menuShortcut?.key == .leftArrow)
+        #expect(Shortcut(keyCode: kVK_Delete, modifiers: .command).menuShortcut?.key == .delete)
+        #expect(Shortcut(keyCode: kVK_F1, modifiers: .command).menuShortcut == nil)
     }
 
     @Test func globalShortcutNeedsControlOptionOrCommand() {

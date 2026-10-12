@@ -1,4 +1,5 @@
 import AppKit
+import Carbon.HIToolbox
 import SwiftUI
 
 /// The menu bar icon of a utility app. Keeps the app running when the user hides the icon in
@@ -78,14 +79,26 @@ extension GearMenu where Content == EmptyView {
 
 extension Shortcut {
     /// The global shortcut as a menu key equivalent, so menus show the shortcut the user set.
-    /// Nil for keys that a menu cannot show as one character.
+    /// Nil for keys that a menu cannot show, such as F1.
     public var menuShortcut: KeyboardShortcut? {
-        guard let name = keys.last, name.count == 1, let character = name.lowercased().first else { return nil }
-        var modifiers: EventModifiers = []
+        let special: [Int: KeyEquivalent] = [
+            kVK_Return: .return, kVK_Tab: .tab, kVK_Space: .space, kVK_Escape: .escape, kVK_Delete: .delete,
+            kVK_ForwardDelete: .deleteForward, kVK_LeftArrow: .leftArrow, kVK_RightArrow: .rightArrow, kVK_UpArrow: .upArrow,
+            kVK_DownArrow: .downArrow, kVK_Home: .home, kVK_End: .end, kVK_PageUp: .pageUp, kVK_PageDown: .pageDown,
+        ]
+        let key: KeyEquivalent
+        if let named = special[Int(keyCode)] {
+            key = named
+        } else if let name = keys.last, name.count == 1, let character = name.lowercased().first {
+            key = KeyEquivalent(character)
+        } else {
+            return nil
+        }
+        var modifiers: SwiftUI.EventModifiers = []
         if modifierFlags.contains(.control) { modifiers.insert(.control) }
         if modifierFlags.contains(.option) { modifiers.insert(.option) }
         if modifierFlags.contains(.shift) { modifiers.insert(.shift) }
         if modifierFlags.contains(.command) { modifiers.insert(.command) }
-        return KeyboardShortcut(KeyEquivalent(character), modifiers: modifiers)
+        return KeyboardShortcut(key, modifiers: modifiers)
     }
 }

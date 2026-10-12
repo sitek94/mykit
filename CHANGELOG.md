@@ -1,19 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-10-13
 
-- `AboutRow`: Settings → About in one row: the version line, and "by Maciek Sitkowski" with a link to sitkowski.dev.
+Breaking: text tokens are one step larger, and `GearMenu` uses the pill style.
 
-- `AppWindows.show` sizes a new window before it centers it: Settings opened off center the first time.
-
-- Text tokens one step larger: caption 11, callout 13, body and headline 14 pt. `.controlHeight` 30 pt.
-
-- `Shortcut.menuShortcut`: a global shortcut as a menu key equivalent (was a copy in each app).
+- Text tokens one step larger: caption 11, callout 13, body and headline 14 pt.
+- `.pill()`, `.buttonStyle(.pill)`, `.pill(selected:)` and `.pillIcon`: one control shape for buttons, menus and text fields, `.controlHeight` (30 pt) tall, so a row of mixed controls lines up. An icon-only button is a circle. `GearMenu` uses it.
+- `controlSurface(selected:)` fills a selected chip with the tint. `.controlBackdrop(.image)`: controls over a photo or video get a fixed light fill, because glass turns dark there after a moment.
+- `AppWindows.activate()`: takes focus from the active app, before an alert, a save panel or Quick Look. `NSApp.activate()` does not on macOS 26.
+- `AppWindows.show` sizes a new window before it centers it (Settings opened off center the first time), and tracks it at once (a quick close and show no longer flickers the Dock icon).
 - `OverlayPanel`: a panel that never takes focus, for thumbnails, toasts and previews.
-- `.pill()` and `.buttonStyle(.pill)`: one control shape for buttons, menus and text fields, 27 pt tall (CleanShot X's pills), so a row of mixed controls lines up. `controlSurface(selected:)` fills a selected chip with the tint. `GearMenu` uses it.
-- `ToastPanel`: a `Toast` at a point on screen, for apps without a window. Its text never truncates on Retina displays.
-
-- `AppWindows.activate()`: takes focus from the active app, before an alert or a save panel. `NSApp.activate()` does not on macOS 26.
+- `ToastPanel`: a `Toast` at a point on screen, for apps without a window. It fades in and out, its text never truncates on Retina displays, and `ToastPanel.tint` sets the app's color.
+- `Shortcut.menuShortcut`: a global shortcut as a menu key equivalent, including Space, arrows and delete (was a copy in each app).
+- `AboutRow`: Settings → About in one row: the version line, and "by Maciek Sitkowski" with a link to sitkowski.dev.
 
 ## 0.2.1 — 2026-10-13
 
