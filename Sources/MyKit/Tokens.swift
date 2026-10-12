@@ -27,6 +27,8 @@ extension Animation {
 }
 
 extension Font {
+    /// Large display text: a color swatch's label, a big number. Not for headings.
+    public nonisolated static let textDisplay = Font.largeTitle
     public nonisolated static let textTitle = Font.title3
     public nonisolated static let textHeadline = Font.headline
     public nonisolated static let textBody = Font.body

@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-10-12
 
+- Text token `.textDisplay` (Large Title) for large display text, such as a color swatch's label.
 - `scripts/sync-lint-config.sh` works a second time: the copies are writable.
 
 ## 0.1.1 — 2026-10-12

@@ -11,7 +11,7 @@ Needs macOS 26 and Xcode 26.
 
 | Part | What it does |
 | --- | --- |
-| Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`), text (`.textTitle` …), status colors (`.success`, `.warning`, `.danger`). Views use these names, never raw values. |
+| Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`), text (`.textDisplay`, `.textTitle` …), status colors (`.success`, `.warning`, `.danger`). Views use these names, never raw values. |
 | Surfaces | `.panelSurface()`, `.controlSurface()`, `.contentSurface()`: the only place that decides where glass is used. |
 | `FloatingPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. |
 | `GlobalShortcut`, `ShortcutRecorder` | System-wide shortcuts the user can change in Settings. Hyper (all four modifiers) shows as ✦. |
