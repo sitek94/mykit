@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `AppWindows.activate()`: takes focus from the active app, before an alert or a save panel. `NSApp.activate()` does not on macOS 26.
+
 ## 0.2.1 — 2026-10-13
 
 - `AppWindows.show`: shows an app window as CleanShot X does. It centers the window on every show, brings it to the front of all apps, and shows a Dock icon while the window is open.

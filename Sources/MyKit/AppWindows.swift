@@ -17,16 +17,18 @@ public enum AppWindows {
         Task {
             try? await Task.sleep(for: delay)
             track(window)
-            forceActivate()
+            activate()
             window.makeKeyAndOrderFront(nil)
             NSApp.setActivationPolicy(.regular)
-            forceActivate()
+            activate()
         }
     }
 
+    /// Takes focus from the active app, for example before an alert or a save panel. `NSApp.activate()` does not.
+    ///
     /// `activate(ignoringOtherApps: true)`, deprecated since macOS 14 but the only call that takes focus from the
     /// active app. Called by selector, so the deprecation warning does not fail the build.
-    private static func forceActivate() {
+    public static func activate() {
         typealias Activate = @convention(c) (AnyObject, Selector, Bool) -> Void
         let selector = NSSelectorFromString("activateIgnoringOtherApps:")
         unsafeBitCast(NSApp.method(for: selector), to: Activate.self)(NSApp, selector, true)
