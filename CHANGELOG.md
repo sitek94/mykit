@@ -1,0 +1,12 @@
+# Changelog
+
+## 0.1.0 — 2026-10-12
+
+- Design tokens: spacing, corner radii, motion, text styles, status colors.
+- Surfaces: `.panelSurface()`, `.controlSurface()`, `.contentSurface()`.
+- `FloatingPanel`: a non-activating panel that closes on Esc, a click outside or an app switch.
+- `GlobalShortcut` and `ShortcutRecorder`: system-wide shortcuts that the user can change; several per app; Hyper shows as ✦.
+- `Toast`, `KeyCap`.
+- Settings parts: `SettingsWindow`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `LaunchAtLoginToggle`.
+- `MenuBarItem`, `AppMenuItems`, `GearMenu`.
+- `scripts/make-icon.swift`, shared SwiftLint and swift-format config, `scripts/check.sh`.
