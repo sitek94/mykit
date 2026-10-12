@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1 — 2026-10-13
+
+- `AppWindows.show`: shows an app window as CleanShot X does. It centers the window on every show, brings it to the front of all apps, and shows a Dock icon while the window is open.
+- `SettingsWindow` uses it. Settings opened from the menu bar no longer stays behind the active app. It opens on the current Space, and Esc closes it.
+
 ## 0.2.0 — 2026-10-12
 
 - Text token `.textDisplay` (Large Title) for large display text, such as a color swatch's label.

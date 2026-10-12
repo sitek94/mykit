@@ -26,15 +26,22 @@ public final class SettingsWindow {
 
     public func show() {
         if window == nil {
-            let window = NSWindow(contentViewController: NSHostingController(rootView: makeContent()))
+            let window = SettingsNSWindow(contentViewController: NSHostingController(rootView: makeContent()))
             window.title = title
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
-            window.center()
+            // Opens on the current Space, not on the one it was last shown on.
+            window.collectionBehavior = [.canJoinAllSpaces, .fullScreenNone]
             self.window = window
         }
-        NSApp.activate()
-        window?.makeKeyAndOrderFront(nil)
+        window.map(AppWindows.show)
+    }
+}
+
+/// Esc closes Settings, as ⌘ W does.
+private final class SettingsNSWindow: NSWindow {
+    override func cancelOperation(_ sender: Any?) {
+        close()
     }
 }
 

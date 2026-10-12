@@ -54,6 +54,8 @@ scripts/check.sh    # format, lint, build with warnings as errors, tests
 
 - [docs/gotchas.md](docs/gotchas.md): traps around focus, permissions, shortcuts, icons and building, with fixes.
 
+Test a change in an app before a release: in the app's folder, `xcrun swift package edit mykit --path ../mykit` builds it against the local myKit. `xcrun swift package unedit mykit` goes back to the released version. Edit mode adds a `Packages/` link and changes `Package.resolved`: never commit those.
+
 ## Versions
 
 Changes are listed in [CHANGELOG.md](CHANGELOG.md); each version is a git tag (`v0.1.0`).
