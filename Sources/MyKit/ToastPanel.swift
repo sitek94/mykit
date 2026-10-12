@@ -11,7 +11,9 @@ public enum ToastPanel {
 
     public static func hide() {
         hideTask?.cancel()
-        panel?.orderOut(nil)
+        guard let panel else { return }
+        self.panel = nil
+        fade(panel, to: 0) { panel.orderOut(nil) }
     }
 
     /// `center` in global top-left coordinates. A warning stays until clicked. With `action`, a click runs it.
@@ -37,13 +39,25 @@ public enum ToastPanel {
         panel.contentView = host
         panel.setFrame(NSRect(origin: origin, size: size), display: false)
         panel.ignoresMouseEvents = !warning && action == nil
+        panel.alphaValue = 0
         panel.orderFrontRegardless()
+        fade(panel, to: 1)
         self.panel = panel
         guard !warning else { return }
         hideTask = Task {
             try? await Task.sleep(for: .seconds(1.2))
             guard !Task.isCancelled else { return }
-            panel.orderOut(nil)
+            hide()
+        }
+    }
+
+    /// Fades in and out instead of a hard cut (the `.standard` motion token's duration).
+    private static func fade(_ panel: NSPanel, to alpha: CGFloat, then done: @escaping @MainActor () -> Void = {}) {
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.2
+            panel.animator().alphaValue = alpha
+        } completionHandler: {
+            MainActor.assumeIsolated { done() }
         }
     }
 }
