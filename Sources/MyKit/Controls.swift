@@ -8,23 +8,26 @@ extension CGFloat {
 extension View {
     /// The one control shape: a capsule `.controlHeight` tall with callout text, for buttons, menus and text fields,
     /// so a row of mixed controls lines up. `selected` fills it with the tint.
-    public func pill(selected: Bool = false) -> some View {
+    /// `icon`: a circle for an icon-only control.
+    public func pill(selected: Bool = false, icon: Bool = false) -> some View {
         font(.textCallout)
             .fontWeight(selected ? .semibold : .regular)
-            .padding(.horizontal, .space3)
+            .padding(.horizontal, icon ? 0 : .space3)
             .frame(minWidth: .controlHeight, minHeight: .controlHeight, maxHeight: .controlHeight)
             .controlSurface(selected: selected)
             .contentShape(.capsule)
     }
 }
 
-/// A button as a `pill()`. `.buttonStyle(.pill)`, or `.pill(selected:)` for a chip in a group.
+/// A button as a `pill()`. `.buttonStyle(.pill)`, `.pill(selected:)` for a chip in a group, `.pillIcon` for an
+/// icon-only button (a circle).
 public struct PillButtonStyle: ButtonStyle {
     let selected: Bool
+    var icon = false
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .pill(selected: selected)
+            .pill(selected: selected, icon: icon)
             .opacity(configuration.isPressed ? 0.6 : 1)
     }
 }
@@ -32,4 +35,5 @@ public struct PillButtonStyle: ButtonStyle {
 extension ButtonStyle where Self == PillButtonStyle {
     public static var pill: PillButtonStyle { PillButtonStyle(selected: false) }
     public static func pill(selected: Bool) -> PillButtonStyle { PillButtonStyle(selected: selected) }
+    public static var pillIcon: PillButtonStyle { PillButtonStyle(selected: false, icon: true) }
 }

@@ -63,7 +63,7 @@ public struct GearMenu<Content: View>: View {
                 .labelStyle(.iconOnly)
         }
         .menuStyle(.button)
-        .buttonStyle(.pill)
+        .buttonStyle(.pillIcon)
         .menuIndicator(.hidden)
         .fixedSize()
         .help("\(appName) Menu")
