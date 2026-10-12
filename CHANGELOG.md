@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `scripts/sync-lint-config.sh` works a second time: the copies are writable.
+
 ## 0.1.1 — 2026-10-12
 
 - `GlobalShortcut`, `SettingsWindow`: explicitly `@MainActor`. 0.1.0 failed to compile in an app's release build.
