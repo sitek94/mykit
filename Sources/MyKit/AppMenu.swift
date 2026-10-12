@@ -7,19 +7,37 @@ import SwiftUI
 /// unless the scene has an `isInserted` binding.
 public struct MenuBarItem<Content: View>: Scene {
     let title: String
-    let systemImage: String
+    let icon: Icon
     let content: () -> Content
     @State private var inserted = true
+
+    enum Icon {
+        case symbol(String)
+        case image(NSImage)
+    }
 
     /// - Parameter systemImage: the outline form of the app's SF Symbol.
     public init(_ title: String, systemImage: String, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
-        self.systemImage = systemImage
+        icon = .symbol(systemImage)
+        self.content = content
+    }
+
+    /// - Parameter image: the app's own glyph, about 18 pt; it is drawn as a template, so macOS colors it.
+    public init(_ title: String, image: NSImage, @ViewBuilder content: @escaping () -> Content) {
+        self.title = title
+        image.isTemplate = true
+        icon = .image(image)
         self.content = content
     }
 
     public var body: some Scene {
-        MenuBarExtra(title, systemImage: systemImage, isInserted: $inserted, content: content)
+        MenuBarExtra(isInserted: $inserted, content: content) {
+            switch icon {
+            case .symbol(let name): Image(systemName: name).accessibilityLabel(title)
+            case .image(let image): Image(nsImage: image).accessibilityLabel(title)
+            }
+        }
     }
 }
 
