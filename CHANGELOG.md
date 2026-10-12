@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `Shortcut.menuShortcut`: a global shortcut as a menu key equivalent (was a copy in each app).
+- `OverlayPanel`: a panel that never takes focus, for thumbnails, toasts and previews.
+- `ToastPanel`: a `Toast` at a point on screen, for apps without a window. Its text never truncates on Retina displays.
+
 - `AppWindows.activate()`: takes focus from the active app, before an alert or a save panel. `NSApp.activate()` does not on macOS 26.
 
 ## 0.2.1 — 2026-10-13

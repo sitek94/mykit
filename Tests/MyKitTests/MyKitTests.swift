@@ -22,6 +22,16 @@ struct ShortcutTests {
         #expect(shortcut.modifierFlags == .command)
     }
 
+    @Test func menuShortcutKeepsTheKeyAndModifiers() {
+        let shortcut = Shortcut(keyCode: kVK_ANSI_A, modifiers: [.control, .shift, .command]).menuShortcut
+        #expect(shortcut?.key == KeyEquivalent("a"))
+        #expect(shortcut?.modifiers == [.control, .shift, .command])
+    }
+
+    @Test func menuShortcutIsNilForANamedKey() {
+        #expect(Shortcut(keyCode: kVK_Space, modifiers: .command).menuShortcut == nil)
+    }
+
     @Test func globalShortcutNeedsControlOptionOrCommand() {
         #expect(!Shortcut(keyCode: kVK_F1, modifiers: []).isValidGlobal)
         #expect(!Shortcut(keyCode: kVK_F1, modifiers: .shift).isValidGlobal)

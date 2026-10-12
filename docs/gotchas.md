@@ -6,6 +6,7 @@ Traps hit while building macOS 26 apps with SwiftPM and SwiftUI + AppKit: sympto
 
 - **`swift build` rejects the manifest (tools version 6.2, `defaultIsolation`).** A `swift` from another toolchain manager (for example swiftly) shadows Xcode's on `PATH`. Use `xcrun swift …`.
 - **The app icon shows small, inside a gray frame.** macOS 26 does that to plain `.icns` icons. Use an Icon Composer `.icon` document (`scripts/make-icon.swift`), compile it with `xcrun actool … --app-icon AppIcon` in the bundle step, and set `CFBundleIconName`.
+- **`actool` fails: "The output directory … does not exist", with a path in another repo.** It runs in a long-lived service that resolves relative paths against an earlier caller's folder. Pass absolute paths (`"$PWD/…"`).
 - **`ImageRenderer` in a Swift script does not compile.** It is main-actor isolated. Wrap the script's top level in `MainActor.assumeIsolated`.
 - **`open` fails with error -600 right after `pkill`.** The old process has not exited yet. Wait until `pgrep` is empty before you launch again.
 - **An app without an Xcode project.** Build with `xcrun swift build -c release`, put the binary and an `Info.plist` into an `.app` in a `scripts/bundle.sh`, and sign it with an "Apple Development" identity.
