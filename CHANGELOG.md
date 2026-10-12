@@ -4,6 +4,7 @@
 
 - `Shortcut.menuShortcut`: a global shortcut as a menu key equivalent (was a copy in each app).
 - `OverlayPanel`: a panel that never takes focus, for thumbnails, toasts and previews.
+- `.pill()` and `.buttonStyle(.pill)`: one control shape for buttons, menus and text fields, 27 pt tall (CleanShot X's pills), so a row of mixed controls lines up. `controlSurface(selected:)` fills a selected chip with the tint. `GearMenu` uses it.
 - `ToastPanel`: a `Toast` at a point on screen, for apps without a window. Its text never truncates on Retina displays.
 
 - `AppWindows.activate()`: takes focus from the active app, before an alert or a save panel. `NSApp.activate()` does not on macOS 26.

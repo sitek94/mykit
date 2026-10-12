@@ -62,6 +62,8 @@ public struct GearMenu<Content: View>: View {
             Label("\(appName) Menu", systemImage: "gearshape")
                 .labelStyle(.iconOnly)
         }
+        .menuStyle(.button)
+        .buttonStyle(.pill)
         .menuIndicator(.hidden)
         .fixedSize()
         .help("\(appName) Menu")

@@ -7,9 +7,14 @@ extension View {
         glassEffect(.regular, in: .rect(cornerRadius: .radiusPanel))
     }
 
-    /// Search fields, chips and buttons that sit on a panel.
-    public func controlSurface() -> some View {
-        glassEffect(.regular, in: .capsule)
+    /// Search fields, chips and buttons that sit on a panel. Selected: filled with the tint, white text.
+    @ViewBuilder
+    public func controlSurface(selected: Bool = false) -> some View {
+        if selected {
+            foregroundStyle(.white).background(.tint, in: .capsule)
+        } else {
+            glassEffect(.regular, in: .capsule)
+        }
     }
 
     /// Cards, previews, text areas. Content is never glass.
