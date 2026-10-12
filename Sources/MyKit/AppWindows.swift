@@ -13,6 +13,11 @@ public enum AppWindows {
     private static var open: [ObjectIdentifier: NSObjectProtocol] = [:]
 
     public static func show(_ window: NSWindow) {
+        // A new hosted window gets its SwiftUI size later: size it first, or `center()` centers a zero-size window,
+        // which then grows to the right and down.
+        if let content = window.contentViewController?.view {
+            window.setContentSize(content.fittingSize)
+        }
         window.center()
         Task {
             try? await Task.sleep(for: delay)
