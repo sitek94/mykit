@@ -30,11 +30,12 @@ extension Font {
     /// Large display text: a color swatch's label, a big number. Not for headings.
     public nonisolated static let textDisplay = Font.largeTitle
     public nonisolated static let textTitle = Font.title3
-    public nonisolated static let textHeadline = Font.headline
-    public nonisolated static let textBody = Font.body
-    public nonisolated static let textCallout = Font.callout
-    public nonisolated static let textCaption = Font.caption
-    public nonisolated static let textCode = Font.body.monospaced()
+    // One step above Apple's macOS styles (13 / 13 / 12 / 10 pt): those read small on a panel seen from a distance.
+    public nonisolated static let textHeadline = Font.system(size: 14, weight: .bold)
+    public nonisolated static let textBody = Font.system(size: 14)
+    public nonisolated static let textCallout = Font.system(size: 13)
+    public nonisolated static let textCaption = Font.system(size: 11)
+    public nonisolated static let textCode = Font.system(size: 14).monospaced()
 }
 
 // Status colors. Always shown with a symbol and text, never color alone.

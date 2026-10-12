@@ -1,8 +1,9 @@
 import SwiftUI
 
 extension CGFloat {
-    /// The height of every control on a panel or overlay: buttons, menus, text fields (CleanShot X's pills: 27 pt).
-    public nonisolated static let controlHeight: CGFloat = 27
+    /// The height of every control on a panel or overlay: buttons, menus, text fields (CleanShot X's pills are 27 pt;
+    /// ours are taller for the larger text tokens).
+    public nonisolated static let controlHeight: CGFloat = 30
 }
 
 extension View {

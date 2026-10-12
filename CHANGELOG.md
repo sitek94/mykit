@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Text tokens one step larger: caption 11, callout 13, body and headline 14 pt. `.controlHeight` 30 pt.
+
 - `Shortcut.menuShortcut`: a global shortcut as a menu key equivalent (was a copy in each app).
 - `OverlayPanel`: a panel that never takes focus, for thumbnails, toasts and previews.
 - `.pill()` and `.buttonStyle(.pill)`: one control shape for buttons, menus and text fields, 27 pt tall (CleanShot X's pills), so a row of mixed controls lines up. `controlSurface(selected:)` fills a selected chip with the tint. `GearMenu` uses it.
