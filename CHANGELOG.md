@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `AboutRow`: Settings → About in one row: the version line, and "by Maciek Sitkowski" with a link to sitkowski.dev.
+
 - `AppWindows.show` sizes a new window before it centers it: Settings opened off center the first time.
 
 - Text tokens one step larger: caption 11, callout 13, body and headline 14 pt. `.controlHeight` 30 pt.

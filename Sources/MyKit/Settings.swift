@@ -119,6 +119,22 @@ public struct VersionLine: View {
     }
 }
 
+/// Settings → About: the version line, and who made the app with a link to the author's site.
+public struct AboutRow: View {
+    public init() {}
+
+    public var body: some View {
+        HStack {
+            VersionLine()
+            Spacer()
+            Link("by Maciek Sitkowski", destination: URL(string: "https://sitkowski.dev")!)
+                .font(.textCaption)
+                .foregroundStyle(.tint)
+                .help("sitkowski.dev")
+        }
+    }
+}
+
 /// Settings → General: "Launch at login".
 public struct LaunchAtLoginToggle: View {
     @State private var enabled = SMAppService.mainApp.status == .enabled
