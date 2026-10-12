@@ -5,6 +5,7 @@ import os
 
 /// A system-wide shortcut that the user can change in Settings (see `ShortcutRecorder`).
 /// Uses Carbon hot keys, which need no extra permission. Each instance has its own id, so an app can have several.
+@MainActor
 @Observable
 public final class GlobalShortcut {
     /// The current shortcut; nil when the user cleared it. Setting it stores it and registers it again.
@@ -83,6 +84,7 @@ public final class GlobalShortcut {
 }
 
 /// One Carbon handler for the process; it reads the hot key id from the event and runs that shortcut's action.
+@MainActor
 private enum HotKeyCenter {
     static let signature = OSType(0x4D59_4B54)  // "MYKT"
     static var actions: [UInt32: () -> Void] = [:]

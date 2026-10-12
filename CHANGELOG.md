@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — 2026-10-12
+
+- `GlobalShortcut`, `SettingsWindow`: explicitly `@MainActor`. 0.1.0 failed to compile in an app's release build.
+- `scripts/check.sh` also builds in release.
+
 ## 0.1.0 — 2026-10-12
 
 - Design tokens: spacing, corner radii, motion, text styles, status colors.

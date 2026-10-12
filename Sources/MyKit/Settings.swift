@@ -4,6 +4,7 @@ import SwiftUI
 import os
 
 /// The app's Settings window: one grouped form, in the order General, the app's sections, Permissions, About.
+@MainActor
 public final class SettingsWindow {
     private let title: String
     private let makeContent: () -> AnyView

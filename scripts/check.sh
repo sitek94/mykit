@@ -15,6 +15,8 @@ echo "== lint"
 
 echo "== build"
 xcrun swift build --build-tests -Xswiftc -warnings-as-errors
+# Apps bundle release builds; some isolation errors show only there.
+xcrun swift build -c release -Xswiftc -warnings-as-errors
 
 echo "== test"
 xcrun swift test --skip-build
