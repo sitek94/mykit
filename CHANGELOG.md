@@ -13,7 +13,7 @@ Breaking: text tokens are one step larger, and `GearMenu` uses the pill style.
 - `ToastPanel`: a `Toast` at a point on screen, for apps without a window. It fades in and out, its text never truncates on Retina displays, and `ToastPanel.tint` sets the app's color.
 - `Shortcut.menuShortcut`: a global shortcut as a menu key equivalent, including Space, arrows and delete (was a copy in each app).
 - `MenuBarItem(_:image:)`: the menu bar icon from the app's own glyph, drawn as a template.
-- Breaking: `scripts/make-icon.swift` takes the app's glyph PNG instead of an SF Symbol name (the SF Symbols license does not allow symbols in app icons).
+- Breaking: `scripts/make-icon.swift` takes the app's glyph PNGs instead of an SF Symbol name (the SF Symbols license does not allow symbols in app icons). Several PNGs become separate layers, front first, each with its own glass.
 - `AboutRow`: Settings → About in one row: the version line, and "by Maciek Sitkowski" with a link to sitkowski.dev.
 
 ## 0.2.1 — 2026-10-13
