@@ -2,7 +2,7 @@
 
 ## 0.3.0 — 2026-10-13
 
-Breaking: text tokens are one step larger, and `GearMenu` uses the pill style.
+Breaking: text tokens are one step larger, `GearMenu` uses the pill style, and `make-icon.swift` takes glyph PNGs.
 
 - Text tokens one step larger: caption 11, callout 13, body and headline 14 pt.
 - `.pill()`, `.buttonStyle(.pill)`, `.pill(selected:)` and `.pillIcon`: one control shape for buttons, menus and text fields, `.controlHeight` (30 pt) tall, so a row of mixed controls lines up. An icon-only button is a circle. `GearMenu` uses it.
