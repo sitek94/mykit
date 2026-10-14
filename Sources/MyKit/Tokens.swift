@@ -64,7 +64,7 @@ struct ChromeLabel: ShapeStyle {
 }
 
 extension ShapeStyle where Self == ChromeFill {
-    /// A chrome fill: white over dark, black over light, at this opacity. Steps in use: 0.03 cards, 0.07 hover,
-    /// 0.04 bottom-bar line, 0.08 drag handle, 0.1 groups and chips, 0.12 pressed, 0.2 controls, 0.29 top-bar line.
+    /// A chrome fill: white over dark, black over light, at this opacity. Steps in use: 0.03 cards, 0.04 bottom-bar
+    /// line, 0.07 hover, 0.08 drag handle, 0.1 groups, chips and light-mode lines, 0.12 pressed, 0.2 controls, 0.29 top-bar line.
     public static func chrome(_ level: Double) -> ChromeFill { ChromeFill(level: level) }
 }

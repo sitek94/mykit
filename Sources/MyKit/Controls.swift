@@ -156,6 +156,8 @@ public struct SegmentGroup<Value: Hashable>: View {
 
     @Binding var selection: Value
     let items: [Item]
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.appearsActive) private var active
 
     public init(selection: Binding<Value>, items: [Item]) {
         _selection = selection
@@ -176,7 +178,13 @@ public struct SegmentGroup<Value: Hashable>: View {
             }
         }
         .frame(height: SegmentMetrics.height)
-        .background(ChromeFill(level: 0.1), in: .rect(cornerRadius: SegmentMetrics.radius))
+        .background(ChromeFill(level: fillLevel), in: .rect(cornerRadius: SegmentMetrics.radius))
+    }
+
+    /// Light mode: fainter, and gone when the window is not key.
+    private var fillLevel: Double {
+        if scheme == .dark { return 0.1 }
+        return active ? 0.06 : 0
     }
 
     private func separatorVisible(before index: Int) -> Bool {
@@ -199,6 +207,7 @@ private struct SegmentButton: View {
     let action: () -> Void
     @State private var hovering = false
     @Environment(\.appearsActive) private var active
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         Button(action: action) {
@@ -206,7 +215,7 @@ private struct SegmentButton: View {
                 .frame(width: SegmentMetrics.width, height: SegmentMetrics.height)
                 .contentShape(.rect)
         }
-        .buttonStyle(SegmentStyle(selected: selected, hovering: hovering, active: active))
+        .buttonStyle(SegmentStyle(selected: selected, hovering: hovering, active: active, dark: scheme == .dark))
         .onHover { hovering = $0 }
         .help(help)
         .accessibilityLabel(title)
@@ -218,16 +227,27 @@ private struct SegmentStyle: ButtonStyle {
     let selected: Bool
     let hovering: Bool
     let active: Bool
+    let dark: Bool
+
+    /// A selected segment has a fill, so a white glyph; light mode drops that fill when the window is not key.
+    private var filled: Bool { selected && (active || dark) }
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(selected ? AnyShapeStyle(.white) : AnyShapeStyle(ChromeLabel()))
-            .opacity(active || selected ? 1 : 0.75)
+            .foregroundStyle(filled ? AnyShapeStyle(.white) : AnyShapeStyle(ChromeLabel()))
+            .opacity(opacity)
             .background(fill(pressed: configuration.isPressed), in: .rect(cornerRadius: SegmentMetrics.radius))
     }
 
+    /// Glyphs dim when the window is not key.
+    private var opacity: Double {
+        if active { return 1 }
+        if !dark { return 0.55 }
+        return selected ? 0.65 : 0.75
+    }
+
     private func fill(pressed: Bool) -> AnyShapeStyle {
-        if selected { return active ? AnyShapeStyle(.tint) : AnyShapeStyle(ChromeFill(level: 0.2)) }
+        if selected { return active ? AnyShapeStyle(.tint) : AnyShapeStyle(ChromeFill(level: dark ? 0.2 : 0)) }
         if pressed { return AnyShapeStyle(ChromeFill(level: 0.12)) }
         return AnyShapeStyle(ChromeFill(level: hovering ? 0.07 : 0))
     }

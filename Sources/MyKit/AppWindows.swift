@@ -13,12 +13,13 @@ public enum AppWindows {
     private static var open: [ObjectIdentifier: NSObjectProtocol] = [:]
     private static var sized: Set<ObjectIdentifier> = []
 
-    /// A window hidden with `orderOut` instead of closed keeps the Dock icon: close it.
-    public static func show(_ window: NSWindow) {
+    /// A window hidden with `orderOut` instead of closed keeps the Dock icon: close it. `size`: the first content size,
+    /// for a window whose content fills its title bar; by default the content's own size.
+    public static func show(_ window: NSWindow, size: CGSize? = nil) {
         // A new hosted window gets its SwiftUI size later: size it first, or `center()` centers a zero-size window,
         // which then grows to the right and down. Only once: a window shown again keeps the size the user gave it.
         if sized.insert(ObjectIdentifier(window)).inserted, let content = window.contentViewController?.view {
-            window.setContentSize(content.fittingSize)
+            window.setContentSize(size ?? content.fittingSize)
         }
         window.center()
         // Tracked at once, so a close just before this show cannot remove the Dock icon in between.

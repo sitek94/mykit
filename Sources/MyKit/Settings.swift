@@ -53,7 +53,7 @@ public final class SettingsWindow {
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenNone]
             self.window = window
         }
-        window.map(AppWindows.show)
+        window.map { AppWindows.show($0) }
     }
 }
 
