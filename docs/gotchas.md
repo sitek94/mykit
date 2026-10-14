@@ -4,7 +4,7 @@ Traps hit while building macOS 26 apps with SwiftPM and SwiftUI + AppKit: sympto
 
 ## Build and icon
 
-- **`swift build` rejects the manifest (tools version 6.2, `defaultIsolation`).** A `swift` from another toolchain manager (for example swiftly) shadows Xcode's on `PATH`. Use `xcrun swift …`.
+- **`swift build` rejects the manifest (tools version 6.2, `defaultIsolation`).** A `swift` from another toolchain manager (for example swiftly) shadows Xcode's on `PATH`. Use `xcrun swift …`. Running the other `swift` once also rewrites `.build/workspace-state.json` and drops `swift package edit` mode: the app then builds against the released myKit. Run `xcrun swift package edit mykit --path ../mykit` again.
 - **The app icon shows small, inside a gray frame.** macOS 26 does that to plain `.icns` icons. Use an Icon Composer `.icon` document (`scripts/make-icon.swift`), compile it with `xcrun actool … --app-icon AppIcon` in the bundle step, and set `CFBundleIconName`.
 - **SF Symbols in an app icon.** The SF Symbols license does not allow symbols in app icons or logos, free apps included. Draw the glyph yourself (SwiftUI shapes in the app, rendered to a PNG) and pass it to `scripts/make-icon.swift`. In the app's UI, menu bar included, SF Symbols are fine.
 - **`actool` fails: "The output directory … does not exist", with a path in another repo.** It runs in a long-lived service that resolves relative paths against an earlier caller's folder. Pass absolute paths (`"$PWD/…"`).
@@ -26,7 +26,12 @@ Traps hit while building macOS 26 apps with SwiftPM and SwiftUI + AppKit: sympto
 - **Every single click feels slow.** `.onTapGesture(count: 2)` next to a single-tap gesture holds each click for the double-click interval. Use one tap handler and read `NSApp.currentEvent?.clickCount`.
 - **A text field does not take focus.** Two `@FocusState`s in one window fight over the first responder; use one enum state. A focus state can also keep its old value from the last time the panel showed: set it to `nil`, then to the field.
 - **The app quits right after launch, with no crash report.** Its menu bar icon is hidden (System Settings → Menu Bar), and a SwiftUI app whose only scene is a `MenuBarExtra` quits when that item goes away. Pass an `isInserted:` binding (`MenuBarItem`).
-- **A hosted view ignores the app's tint.** An `NSHostingView` in a panel or window does not inherit the tint of the App scene. Set it at the hosting root (`FloatingPanel.setContent(tint:)`, `SettingsWindow(tint:)`).
+- **A hosted view ignores the app's tint.** An `NSHostingView` in a panel or window does not inherit the tint of the App scene. myKit uses the system accent, which every hosting view gets; an app that sets its own tint must set it at each hosting root.
+- **A window opens taller than its SwiftUI frame, or off center.** A window whose content runs under the title bar (`fullSizeContentView`) gets the content's fitting size plus the title bar. Give the size to `AppWindows.show(_:size:)` and set the hosting controller's `sizingOptions = []`. The fitting size can also be zero before the first layout; `show` centers again just before the window appears.
+- **A split view window shows a small, centered title.** `NavigationSplitView` makes no toolbar when it has no items. Give the window an empty `NSToolbar` (`.unified`): the title then shows large, at the left of the content, as in System Settings. With no SwiftUI toolbar bridging, set `window.title` yourself.
+- **A form row's label sits higher than its control.** A `.plain` button has no text baseline, and a grouped `Form` aligns rows by the first baseline. Give the control an `alignmentGuide(.firstTextBaseline)`.
+- **A window opens with a control already recording or ringed.** The first focusable control takes keyboard focus when the window becomes key. `.focusable(false)` on a control that must not (a shortcut field).
+- **A panel that slides out still takes keys.** A non-activating panel stays key until it is ordered out. Close it at once before you post keys to another app (`StripPanel.dismiss(_:animated: false)`).
 
 ## Global shortcuts
 

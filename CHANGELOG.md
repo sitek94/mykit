@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased (0.5.0)
+
+Breaking: one design system for all the apps, from a study of CleanShot X's look. The system accent replaces the per-app tint.
+
+- The system accent color for selection and primary actions; the `tint:` parameters of `SettingsWindow`, `FloatingPanel.setContent` and `ToastPanel` are gone. An app's own color is for its icon only.
+- Tokens: 26 pt controls, radii 20 / 12 / 9 / 6 and `radiusThumbnail` 17, macOS text sizes (13 body, 12 medium callout, 11 caption), one motion curve, `.chrome(level)` fills.
+- Controls: the pill is a 26 pt capsule on a chrome fill; `SegmentGroup`, `.chip(selected:)`, `.smallPrimary`, `.ghost`, `.overlay` / `.overlayIcon` (AppKit's light frost over an image), `.selectionRing(_:)`.
+- Surfaces: `.capsuleSurface()` and `.curtainSurface(cornerRadius:)`; `controlSurface` and `controlBackdrop` are gone.
+- `StripPanel`: a strip of cards along the top or bottom of the screen, 40 pt in, that slides in and out; it can close at once before a paste. `FloatingPanel.dismiss` is open.
+- `SettingsWindow(panes:)`: a sidebar like System Settings: `IconTile` colored tiles (`SettingsPane(_:systemImage:tint:)`), 36 pt rows, About at the bottom, ↑ and ↓, the pane title in the toolbar, 810 × 660. `show(pane:)` opens a pane.
+- `ShortcutRecorder` is a key field: the keys on a light fill, "Record Shortcut" when empty, the clear button on hover. It takes no keyboard focus.
+- `PanelMenu` (was `GearMenu`): a "•••" ghost button.
+- `AppWindows.show(_:size:)` takes a first size for a window whose content fills the title bar, and centers the window again just before it first shows.
+- Lint messages name the current tokens.
+
 ## 0.4.1 — 2026-10-14
 
 - `SettingsWindow(panes:)`: the sidebar keeps its width; "Permissions" was cut off.

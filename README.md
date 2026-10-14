@@ -11,25 +11,26 @@ Needs macOS 26 and Xcode 26.
 
 | Part | What it does |
 | --- | --- |
-| Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`), text (`.textDisplay`, `.textTitle` …), status colors (`.success`, `.warning`, `.danger`). Views use these names, never raw values. |
-| Surfaces | `.panelSurface()`, `.controlSurface(selected:)`, `.contentSurface()`: the only place that decides where glass is used. `.controlBackdrop(.image)` for controls over a photo or video. |
-| Controls | `.pill()`, `.buttonStyle(.pill)`, `.pillIcon`: one shape and height (`.controlHeight`) for buttons, menus and text fields. |
-| `FloatingPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. |
+| Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`, one curve), text (`.textBody` 13, `.textCallout` 12 medium, `.textCaption` 11 …), status colors (`.success`, `.warning`, `.danger`), chrome fills (`.chrome(level)`: white over dark, black over light). Views use these names, never raw values. |
+| Surfaces | `.panelSurface()`, `.capsuleSurface()`, `.curtainSurface(cornerRadius:)`, `.contentSurface()`: the only place that decides where glass is used. |
+| Controls | `.pill()`, `.buttonStyle(.pill)`, `.pill(selected:)`, `.pillIcon`: the 26 pt capsule for buttons, menus and text fields. `SegmentGroup` (a tool picker), `.chip(selected:)` (filters), `.smallPrimary` (Restore, Paste), `.ghost` (an icon with no fill until hover), `.overlay` and `.overlayIcon` (light frosted buttons over an image), `.selectionRing(_:)`. |
+| `IconTile` | A white symbol on a small colored tile, as in the System Settings sidebar. |
+| `FloatingPanel`, `StripPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. `StripPanel`: a strip of cards along the top or bottom of the screen that slides in and out. |
 | `OverlayPanel` | A panel that never takes focus: thumbnails, toasts, previews. |
-| `AppWindows` | `show(window)`: an app window centered, in front of all apps, with a Dock icon while open. `activate()`: take focus before an alert or a save panel. |
-| `GlobalShortcut`, `ShortcutRecorder` | System-wide shortcuts the user can change in Settings. Hyper (all four modifiers) shows as ✦. |
+| `AppWindows` | `show(window, size:)`: an app window centered, in front of all apps, with a Dock icon while open. `activate()`: take focus before an alert or a save panel. |
+| `GlobalShortcut`, `ShortcutRecorder` | System-wide shortcuts the user can change in Settings, in a key field. Hyper (all four modifiers) shows as ✦. |
 | `Toast`, `ToastPanel`, `KeyCap` | A short confirmation, in a view or at a point on screen; key caps for hints. |
-| `SettingsWindow`, `SettingsPane`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `AboutRow`, `LaunchAtLoginToggle` | The standard Settings window and its rows: one form when short, a sidebar of panes (as in System Settings) when long. |
-| `MenuBarItem`, `AppMenuItems`, `GearMenu`, `Shortcut.menuShortcut` | The menu bar icon, an SF Symbol or the app's own glyph (survives being hidden in System Settings), Settings… / Quit in the app's own UI, and a global shortcut shown in a menu. |
+| `SettingsWindow`, `SettingsPane`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `AboutRow`, `LaunchAtLoginToggle` | The standard Settings window and its rows: one form when short; when long, a sidebar of panes with colored tiles, as in System Settings. `show(pane:)` opens it on a pane. |
+| `MenuBarItem`, `AppMenuItems`, `PanelMenu`, `Shortcut.menuShortcut` | The menu bar icon, an SF Symbol or the app's own glyph (survives being hidden in System Settings), the "•••" menu with Settings… / Quit in the app's own UI, and a global shortcut shown in a menu. |
 | `scripts/make-icon.swift` | Writes an Icon Composer app icon: a gradient and the app's own glyph (a PNG the app draws; SF Symbols may not be used in app icons). |
 | `lint/`, `.swift-format` | The shared SwiftLint rules (including the token rules) and the swift-format config. |
 
-Each app keeps its brand color in its own `Color.brand` and passes it as `tint:` where myKit hosts SwiftUI views.
+Selection and primary actions use the system accent color, the user's choice in System Settings. An app's own color is for its icon only.
 
 ## Use it in an app
 
 ```swift
-.package(url: "https://github.com/sitek94/mykit", from: "0.3.0")
+.package(url: "https://github.com/sitek94/mykit", from: "0.5.0")
 ```
 
 Then copy the lint config at the same version:
