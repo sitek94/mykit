@@ -95,7 +95,8 @@ struct SettingsSidebar: View {
             List(panes, selection: $selection.id) { pane in
                 Label(pane.title, systemImage: pane.systemImage)
             }
-            .navigationSplitViewColumnWidth(210)
+            .frame(minWidth: 210)
+            .navigationSplitViewColumnWidth(min: 210, ideal: 210, max: 240)
             .toolbar(removing: .sidebarToggle)
         } detail: {
             if let pane = panes.first(where: { $0.id == selection.id }) {

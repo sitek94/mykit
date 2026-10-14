@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 — 2026-10-14
+
+- `SettingsWindow(panes:)`: the sidebar keeps its width; "Permissions" was cut off.
+
 ## 0.4.0 — 2026-10-14
 
 - `SettingsWindow(title:tint:panes:)` with `SettingsPane`: a sidebar of panes, each a grouped form, for long Settings (as in System Settings). The one-form window stays for short ones.
