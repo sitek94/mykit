@@ -48,10 +48,10 @@ extension ShapeStyle where Self == Color {
 
 /// The fills of chrome controls: white over dark, black over light, never a fixed gray, so they read on any
 /// material. `level` is the opacity.
-struct ChromeFill: ShapeStyle {
+public struct ChromeFill: ShapeStyle {
     let level: Double
 
-    func resolve(in environment: EnvironmentValues) -> Color {
+    public func resolve(in environment: EnvironmentValues) -> Color {
         (environment.colorScheme == .dark ? Color.white : Color.black).opacity(level)
     }
 }
@@ -61,4 +61,10 @@ struct ChromeLabel: ShapeStyle {
     func resolve(in environment: EnvironmentValues) -> Color {
         Color(white: environment.colorScheme == .dark ? 0.9 : 0.1)
     }
+}
+
+extension ShapeStyle where Self == ChromeFill {
+    /// A chrome fill: white over dark, black over light, at this opacity. Steps in use: 0.03 cards, 0.07 hover,
+    /// 0.04 bottom-bar line, 0.08 drag handle, 0.1 groups and chips, 0.12 pressed, 0.2 controls, 0.29 top-bar line.
+    public static func chrome(_ level: Double) -> ChromeFill { ChromeFill(level: level) }
 }
