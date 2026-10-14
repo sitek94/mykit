@@ -69,7 +69,7 @@ public struct ShortcutRecorder: View {
     /// Room between the key glyphs: "⌃ ⇧ ⌘ S".
     private static let keySpacing: CGFloat = 3
     /// The baseline of 13 pt text below its center.
-    private static let baselineOffset: CGFloat = 4.5
+    private nonisolated static let baselineOffset: CGFloat = 4.5
 
     private var filled: Bool { shortcut.shortcut != nil && !recording }
 
