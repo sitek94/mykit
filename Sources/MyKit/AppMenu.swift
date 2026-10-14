@@ -60,8 +60,8 @@ public struct AppMenuItems: View {
     }
 }
 
-/// A gear button for the app's own UI: the app's items, then Settings… and Quit.
-public struct GearMenu<Content: View>: View {
+/// The "•••" menu in a panel's corner: the app's items, then Settings… and Quit.
+public struct PanelMenu<Content: View>: View {
     let appName: String
     let openSettings: () -> Void
     let content: () -> Content
@@ -78,18 +78,18 @@ public struct GearMenu<Content: View>: View {
             Divider()
             AppMenuItems(appName: appName, openSettings: openSettings)
         } label: {
-            Label("\(appName) Menu", systemImage: "gearshape")
+            Label("\(appName) Menu", systemImage: "ellipsis")
                 .labelStyle(.iconOnly)
         }
         .menuStyle(.button)
-        .buttonStyle(.pillIcon)
+        .buttonStyle(.ghost)
         .menuIndicator(.hidden)
         .fixedSize()
         .help("\(appName) Menu")
     }
 }
 
-extension GearMenu where Content == EmptyView {
+extension PanelMenu where Content == EmptyView {
     public init(appName: String, openSettings: @escaping () -> Void) {
         self.init(appName: appName, openSettings: openSettings) { EmptyView() }
     }
