@@ -295,3 +295,51 @@ private struct Frost: NSViewRepresentable {
 
     func updateNSView(_ view: NSVisualEffectView, context: Context) {}
 }
+
+/// An icon with no fill until the pointer is on it, for a menu or action in a panel's corner ("•••").
+public struct GhostButtonStyle: ButtonStyle {
+    static let size = CGSize(width: 32, height: 24)
+    static let radius: CGFloat = 7
+
+    public func makeBody(configuration: Configuration) -> some View {
+        GhostBody(label: configuration.label, pressed: configuration.isPressed)
+    }
+}
+
+private struct GhostBody<Label: View>: View {
+    let label: Label
+    let pressed: Bool
+    @State private var hovering = false
+
+    var body: some View {
+        label
+            .foregroundStyle(.secondary)
+            .frame(minWidth: GhostButtonStyle.size.width, minHeight: GhostButtonStyle.size.height)
+            .background(ChromeFill(level: pressed ? 0.12 : hovering ? 0.07 : 0), in: .rect(cornerRadius: GhostButtonStyle.radius))
+            .contentShape(.rect(cornerRadius: GhostButtonStyle.radius))
+            .onHover { hovering = $0 }
+    }
+}
+
+extension ButtonStyle where Self == GhostButtonStyle {
+    public static var ghost: GhostButtonStyle { GhostButtonStyle() }
+}
+
+extension View {
+    /// The accent ring around a selected card's image: 4 pt wide, 1 pt off its edge, corners that follow the image's.
+    public func selectionRing(_ selected: Bool, cornerRadius: CGFloat = .radiusCard) -> some View {
+        background {
+            if selected {
+                RoundedRectangle(cornerRadius: cornerRadius + SelectionRing.outset, style: .continuous)
+                    .strokeBorder(.tint, lineWidth: SelectionRing.width)
+                    .padding(-SelectionRing.outset)
+            }
+        }
+    }
+}
+
+private enum SelectionRing {
+    static let width: CGFloat = 4
+    /// The ring's outer edge from the image's edge: the ring and a 1 pt gap.
+    static let outset: CGFloat = 5
+}

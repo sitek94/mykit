@@ -63,7 +63,7 @@ open class FloatingPanel: NSPanel {
         startMonitoring()
     }
 
-    public func dismiss(_ reason: String) {
+    open func dismiss(_ reason: String) {
         guard isVisible else { return }
         orderOut(nil)
         stopMonitoring()
