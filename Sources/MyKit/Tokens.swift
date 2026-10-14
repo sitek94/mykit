@@ -18,6 +18,8 @@ extension CGFloat {
     public nonisolated static let radiusCard: CGFloat = 12
     public nonisolated static let radiusInner: CGFloat = 9
     public nonisolated static let radiusSmall: CGFloat = 6
+    /// Floating thumbnails of a capture or a clip.
+    public nonisolated static let radiusThumbnail: CGFloat = 17
 }
 
 extension Animation {

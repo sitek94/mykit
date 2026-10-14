@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 extension CGFloat {
@@ -24,7 +25,6 @@ private struct Pill: ViewModifier {
     let pressed: Bool
     @Environment(\.colorScheme) private var scheme
     @Environment(\.appearsActive) private var active
-    @Environment(\.controlBackdrop) private var backdrop
 
     func body(content: Content) -> some View {
         content
@@ -35,14 +35,13 @@ private struct Pill: ViewModifier {
             .background(fill, in: .capsule)
             .overlay {
                 // Light mode: a white rim lifts the light fill off a light bar.
-                if scheme == .light, !selected, backdrop == .panel { Capsule().strokeBorder(.white, lineWidth: 1) }
+                if scheme == .light, !selected { Capsule().strokeBorder(.white, lineWidth: 1) }
             }
             .shadow(color: shadowColor, radius: 7.5, y: 2.5)
             .contentShape(.capsule)
     }
 
     private var fill: AnyShapeStyle {
-        if backdrop == .image { return AnyShapeStyle(Color.white.opacity(0.75)) }
         if pressed { return AnyShapeStyle(Color.white.opacity(0.42)) }
         if selected { return active ? AnyShapeStyle(.tint) : AnyShapeStyle(ChromeFill(level: scheme == .dark ? 0.2 : 0.25)) }
         if scheme == .dark { return AnyShapeStyle(ChromeFill(level: 0.2)) }
@@ -51,7 +50,7 @@ private struct Pill: ViewModifier {
 
     /// Only light mode in a key window has a shadow; in dark mode the fill alone separates the control.
     private var shadowColor: Color {
-        guard scheme == .light, active, backdrop == .panel else { return .clear }
+        guard scheme == .light, active else { return .clear }
         return .black.opacity(0.17)
     }
 }
@@ -251,4 +250,48 @@ private struct SegmentStyle: ButtonStyle {
         if pressed { return AnyShapeStyle(ChromeFill(level: 0.12)) }
         return AnyShapeStyle(ChromeFill(level: hovering ? 0.07 : 0))
     }
+}
+
+/// A button over a photo or video (a thumbnail's controls): light frost in any appearance, so it reads on any image.
+/// `.overlay`: a title in a capsule 27 pt tall. `.overlayIcon`: a glyph in a 22 pt circle.
+public struct OverlayButtonStyle: ButtonStyle {
+    static let height: CGFloat = 27
+    static let iconSize: CGFloat = 22
+    /// Each side of a title.
+    static let titlePadding: CGFloat = 12
+
+    let icon: Bool
+
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(icon ? .textCaption.weight(.heavy) : .textCallout)
+            .imageScale(icon ? .small : .medium)
+            .foregroundStyle(.primary)
+            .padding(.horizontal, icon ? 0 : Self.titlePadding)
+            .frame(width: icon ? Self.iconSize : nil, height: icon ? Self.iconSize : Self.height)
+            .background(Frost().clipShape(.capsule))
+            .brightness(configuration.isPressed ? -0.08 : 0)
+            .contentShape(.capsule)
+            .environment(\.colorScheme, .light)
+    }
+}
+
+extension ButtonStyle where Self == OverlayButtonStyle {
+    public static var overlay: OverlayButtonStyle { OverlayButtonStyle(icon: false) }
+    public static var overlayIcon: OverlayButtonStyle { OverlayButtonStyle(icon: true) }
+}
+
+/// AppKit's light sidebar material, blended with what is under it in the window: the frost of `OverlayButtonStyle`.
+/// SwiftUI's materials come out darker over dark glass.
+private struct Frost: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .sidebar
+        view.blendingMode = .withinWindow
+        view.state = .active
+        view.appearance = NSAppearance(named: .aqua)
+        return view
+    }
+
+    func updateNSView(_ view: NSVisualEffectView, context: Context) {}
 }

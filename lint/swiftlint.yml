@@ -32,7 +32,7 @@ custom_rules:
     name: Raw corner radius
     regex: 'cornerRadius:\s*(?!0\b)\d'
     excluded_match_kinds: [comment, doccomment, string]
-    message: "Use a radius token: .radiusPanel (20), .radiusCard (12), .radiusInner (9), .radiusSmall (6), or ConcentricRectangle near a container corner."
+    message: "Use a radius token: .radiusPanel (20), .radiusCard (12), .radiusInner (9), .radiusSmall (6), .radiusThumbnail (17), or ConcentricRectangle near a container corner."
     severity: error
   system_font:
     name: System font style

@@ -12,25 +12,13 @@ extension View {
         glassEffect(.regular, in: .capsule)
     }
 
+    /// Over an image while its controls show (a hovered thumbnail): dark glass that blurs the image, in any appearance.
+    public func curtainSurface(cornerRadius: CGFloat) -> some View {
+        glassEffect(.regular, in: .rect(cornerRadius: cornerRadius)).environment(\.colorScheme, .dark)
+    }
+
     /// Cards, previews, text areas. Content is never glass.
     public func contentSurface() -> some View {
         background(.background, in: .rect(cornerRadius: .radiusCard))
-    }
-}
-
-/// What controls sit on. Over a photo or video (`.image`), controls use a fixed frosted light fill that reads on any
-/// image, instead of the chrome fills that follow the appearance.
-public enum ControlBackdrop: Sendable {
-    case panel, image
-}
-
-extension EnvironmentValues {
-    @Entry public var controlBackdrop: ControlBackdrop = .panel
-}
-
-extension View {
-    /// What the controls inside sit on: `.image` for controls over a photo or video.
-    public func controlBackdrop(_ backdrop: ControlBackdrop) -> some View {
-        environment(\.controlBackdrop, backdrop)
     }
 }
