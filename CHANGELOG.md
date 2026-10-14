@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `SettingsWindow(title:tint:panes:)` with `SettingsPane`: a sidebar of panes, each a grouped form, for long Settings (as in System Settings). The one-form window stays for short ones.
+
 ## 0.3.0 — 2026-10-13
 
 Breaking: text tokens are one step larger, `GearMenu` uses the pill style, and `make-icon.swift` takes glyph PNGs.

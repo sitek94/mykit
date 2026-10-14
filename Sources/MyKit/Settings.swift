@@ -3,16 +3,20 @@ import ServiceManagement
 import SwiftUI
 import os
 
-/// The app's Settings window: one grouped form, in the order General, the app's sections, Permissions, About.
+/// The app's Settings window, in the order General, the app's sections, Permissions, About.
+/// Short: one grouped form. Long: a sidebar of panes, as in System Settings.
 @MainActor
 public final class SettingsWindow {
     private let title: String
     private let makeContent: () -> AnyView
+    private let sidebar: Bool
     private var window: NSWindow?
 
+    /// One grouped form.
     /// - Parameter tint: the app's brand color. A hosted window does not inherit the app's tint.
     public init(title: String, tint: Color, @ViewBuilder content: @escaping () -> some View) {
         self.title = title
+        sidebar = false
         makeContent = {
             AnyView(
                 Form(content: content)
@@ -24,17 +28,83 @@ public final class SettingsWindow {
         }
     }
 
+    /// A sidebar of panes; each pane is a grouped form. The window remembers the last pane while the app runs.
+    /// - Parameter tint: the app's brand color. A hosted window does not inherit the app's tint.
+    public init(title: String, tint: Color, panes: [SettingsPane]) {
+        self.title = title
+        sidebar = true
+        let selection = SettingsSelection(panes.first?.id)
+        makeContent = {
+            AnyView(SettingsSidebar(panes: panes, selection: selection).tint(tint))
+        }
+    }
+
     public func show() {
         if window == nil {
-            let window = SettingsNSWindow(contentViewController: NSHostingController(rootView: makeContent()))
+            let host = NSHostingController(rootView: makeContent())
+            let window = SettingsNSWindow(contentViewController: host)
             window.title = title
             window.styleMask = [.titled, .closable]
+            if sidebar {
+                // The sidebar runs up under the title bar, as in System Settings.
+                host.sceneBridgingOptions = [.toolbars]
+                window.styleMask.insert(.fullSizeContentView)
+                window.toolbarStyle = .unified
+            }
             window.isReleasedWhenClosed = false
             // Opens on the current Space, not on the one it was last shown on.
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenNone]
             self.window = window
         }
         window.map(AppWindows.show)
+    }
+}
+
+/// One pane of a long Settings window: a sidebar row and its grouped form.
+public struct SettingsPane: Identifiable {
+    public let id: String
+    let title: String
+    let systemImage: String
+    let content: () -> AnyView
+
+    /// - Parameter systemImage: an SF Symbol for the sidebar row.
+    public init(_ title: String, systemImage: String, @ViewBuilder content: @escaping () -> some View) {
+        id = title
+        self.title = title
+        self.systemImage = systemImage
+        self.content = { AnyView(content()) }
+    }
+}
+
+@MainActor
+@Observable
+final class SettingsSelection {
+    var id: String?
+
+    init(_ id: String?) {
+        self.id = id
+    }
+}
+
+struct SettingsSidebar: View {
+    let panes: [SettingsPane]
+    @Bindable var selection: SettingsSelection
+
+    var body: some View {
+        NavigationSplitView {
+            List(panes, selection: $selection.id) { pane in
+                Label(pane.title, systemImage: pane.systemImage)
+            }
+            .navigationSplitViewColumnWidth(210)
+            .toolbar(removing: .sidebarToggle)
+        } detail: {
+            if let pane = panes.first(where: { $0.id == selection.id }) {
+                Form { pane.content() }
+                    .formStyle(.grouped)
+                    .navigationTitle(pane.title)
+            }
+        }
+        .frame(width: 700, height: 500)
     }
 }
 

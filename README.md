@@ -19,7 +19,7 @@ Needs macOS 26 and Xcode 26.
 | `AppWindows` | `show(window)`: an app window centered, in front of all apps, with a Dock icon while open. `activate()`: take focus before an alert or a save panel. |
 | `GlobalShortcut`, `ShortcutRecorder` | System-wide shortcuts the user can change in Settings. Hyper (all four modifiers) shows as ✦. |
 | `Toast`, `ToastPanel`, `KeyCap` | A short confirmation, in a view or at a point on screen; key caps for hints. |
-| `SettingsWindow`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `AboutRow`, `LaunchAtLoginToggle` | The standard Settings window and its rows. |
+| `SettingsWindow`, `SettingsPane`, `PermissionRow`, `SystemSettingsPane`, `VersionLine`, `AboutRow`, `LaunchAtLoginToggle` | The standard Settings window and its rows: one form when short, a sidebar of panes (as in System Settings) when long. |
 | `MenuBarItem`, `AppMenuItems`, `GearMenu`, `Shortcut.menuShortcut` | The menu bar icon, an SF Symbol or the app's own glyph (survives being hidden in System Settings), Settings… / Quit in the app's own UI, and a global shortcut shown in a menu. |
 | `scripts/make-icon.swift` | Writes an Icon Composer app icon: a gradient and the app's own glyph (a PNG the app draws; SF Symbols may not be used in app icons). |
 | `lint/`, `.swift-format` | The shared SwiftLint rules (including the token rules) and the swift-format config. |
