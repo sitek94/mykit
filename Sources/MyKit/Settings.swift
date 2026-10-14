@@ -8,15 +8,21 @@ import os
 @MainActor
 public final class SettingsWindow {
     private let title: String
-    private let makeContent: () -> AnyView
+    /// Builds the content; its argument sets the window title.
+    private let makeContent: (@escaping (String) -> Void) -> AnyView
     private let sidebar: Bool
+    /// The shown pane, in a sidebar window.
+    private let selection: SettingsSelection?
     private var window: NSWindow?
+    /// The pane title, also when it is set before the window exists.
+    private var shownTitle: String?
 
     /// One grouped form.
     public init(title: String, @ViewBuilder content: @escaping () -> some View) {
         self.title = title
         sidebar = false
-        makeContent = {
+        selection = nil
+        makeContent = { _ in
             AnyView(
                 Form(content: content)
                     .formStyle(.grouped)
@@ -31,20 +37,30 @@ public final class SettingsWindow {
         self.title = title
         sidebar = true
         let selection = SettingsSelection(panes.first?.id)
-        makeContent = {
-            AnyView(SettingsSidebar(panes: panes, selection: selection))
+        self.selection = selection
+        makeContent = { showTitle in
+            AnyView(SettingsSidebar(panes: panes, selection: selection, showTitle: showTitle))
         }
     }
 
-    public func show() {
+    /// - Parameter pane: the title of the pane to show, in a sidebar window; nil keeps the last one.
+    public func show(pane: String? = nil) {
+        if let pane { selection?.id = pane }
         if window == nil {
-            let host = NSHostingController(rootView: makeContent())
+            let host = NSHostingController(
+                rootView: makeContent { [weak self] in
+                    self?.shownTitle = $0
+                    self?.window?.title = $0
+                })
             let window = SettingsNSWindow(contentViewController: host)
-            window.title = title
-            window.styleMask = [.titled, .closable]
+            window.title = shownTitle ?? title
+            window.styleMask = [.titled, .closable, .miniaturizable]
             if sidebar {
-                // The sidebar runs up under the title bar, as in System Settings.
-                host.sceneBridgingOptions = [.toolbars]
+                // The sidebar runs up under the title bar, as in System Settings. An empty toolbar: the window then shows
+                // the pane's title large, at the left.
+                window.toolbar = NSToolbar()
+                // A fixed size, set by `show`: the content's own size would add the title bar's height again.
+                host.sizingOptions = []
                 window.styleMask.insert(.fullSizeContentView)
                 window.toolbarStyle = .unified
             }
@@ -53,7 +69,8 @@ public final class SettingsWindow {
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenNone]
             self.window = window
         }
-        window.map { AppWindows.show($0) }
+        // The sidebar fills the title bar, so the content's own size would leave out the title bar's height.
+        window.map { AppWindows.show($0, size: sidebar ? SettingsSidebar.size : nil) }
     }
 }
 
@@ -62,13 +79,17 @@ public struct SettingsPane: Identifiable {
     public let id: String
     let title: String
     let systemImage: String
+    let tint: IconTile.Tint
     let content: () -> AnyView
 
-    /// - Parameter systemImage: an SF Symbol for the sidebar row.
-    public init(_ title: String, systemImage: String, @ViewBuilder content: @escaping () -> some View) {
+    /// - Parameters:
+    ///   - systemImage: an SF Symbol for the row's tile.
+    ///   - tint: the tile color. Gray for General, Shortcuts and About; a color for the app's own panes.
+    public init(_ title: String, systemImage: String, tint: IconTile.Tint, @ViewBuilder content: @escaping () -> some View) {
         id = title
         self.title = title
         self.systemImage = systemImage
+        self.tint = tint
         self.content = { AnyView(content()) }
     }
 }
@@ -83,26 +104,80 @@ final class SettingsSelection {
     }
 }
 
+/// The long Settings window: rows with colored tiles in the sidebar, About alone at the bottom; ↑ and ↓ change the pane.
 struct SettingsSidebar: View {
+    static let size = CGSize(width: 810, height: 660)
+    static let sidebarWidth: CGFloat = 220
+
     let panes: [SettingsPane]
     @Bindable var selection: SettingsSelection
+    /// Sets the window title to the pane's title.
+    let showTitle: (String) -> Void
 
     var body: some View {
         NavigationSplitView {
-            List(panes, selection: $selection.id) { pane in
-                Label(pane.title, systemImage: pane.systemImage)
+            VStack(spacing: .space1) {
+                ForEach(panes.filter { $0.id != "About" }) { row($0) }
+                Spacer()
+                panes.first { $0.id == "About" }.map(row)
             }
-            .frame(minWidth: 210)
-            .navigationSplitViewColumnWidth(min: 210, ideal: 210, max: 240)
+            .padding(SettingsRow.inset)
+            .frame(minWidth: Self.sidebarWidth)
+            .navigationSplitViewColumnWidth(min: Self.sidebarWidth, ideal: Self.sidebarWidth, max: Self.sidebarWidth)
             .toolbar(removing: .sidebarToggle)
+            .focusable()
+            .focusEffectDisabled()
+            .onKeyPress(.upArrow) { move(by: -1) }
+            .onKeyPress(.downArrow) { move(by: 1) }
         } detail: {
             if let pane = panes.first(where: { $0.id == selection.id }) {
                 Form { pane.content() }
                     .formStyle(.grouped)
-                    .navigationTitle(pane.title)
             }
         }
-        .frame(width: 700, height: 500)
+        .onChange(of: selection.id, initial: true) { _, id in
+            panes.first { $0.id == id }.map { showTitle($0.title) }
+        }
+    }
+
+    private func row(_ pane: SettingsPane) -> some View {
+        SettingsRow(pane: pane, selected: pane.id == selection.id) { selection.id = pane.id }
+    }
+
+    private func move(by step: Int) -> KeyPress.Result {
+        guard let index = panes.firstIndex(where: { $0.id == selection.id }), panes.indices.contains(index + step) else { return .ignored }
+        selection.id = panes[index + step].id
+        return .handled
+    }
+}
+
+private struct SettingsRow: View {
+    static let height: CGFloat = 36
+    static let radius: CGFloat = 13
+    /// From the sidebar panel's edge to a row.
+    static let inset: CGFloat = 10
+    /// The tile's distance from the row's left edge; the title's from the tile.
+    static let tileInset: CGFloat = 6
+    static let titleGap: CGFloat = 9
+
+    let pane: SettingsPane
+    let selected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: Self.titleGap) {
+                IconTile(systemImage: pane.systemImage, tint: pane.tint)
+                Text(pane.title).font(.textBody)
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, Self.tileInset)
+            .frame(height: Self.height)
+            .background(selected ? AnyShapeStyle(.chrome(0.07)) : AnyShapeStyle(.clear), in: .rect(cornerRadius: Self.radius))
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }
 
