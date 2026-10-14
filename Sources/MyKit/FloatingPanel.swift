@@ -48,9 +48,9 @@ open class FloatingPanel: NSPanel {
         isReleasedWhenClosed = false
     }
 
-    /// Hosts a SwiftUI view. `tint` is the app's brand color: a hosted view does not inherit the app's tint.
-    public func setContent(tint: Color, @ViewBuilder _ content: () -> some View) {
-        let host = NSHostingView(rootView: AnyView(content().tint(tint)))
+    /// Hosts a SwiftUI view.
+    public func setContent(@ViewBuilder _ content: () -> some View) {
+        let host = NSHostingView(rootView: AnyView(content()))
         host.sizingOptions = []
         contentView = host
     }

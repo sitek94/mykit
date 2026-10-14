@@ -5,8 +5,6 @@ import SwiftUI
 /// only when it is a warning or has an action.
 @MainActor
 public enum ToastPanel {
-    /// The app's brand color. A hosted view does not inherit the app's tint.
-    public static var tint: Color = .accentColor
     private static var panel: OverlayPanel?
     private static var hideTask: Task<Void, Never>?
 
@@ -28,7 +26,7 @@ public enum ToastPanel {
         let host = NSHostingView(
             // Ideal width, never "Cop…": text measured off screen can come out a little wider on a Retina display;
             // the clear margin around the toast takes the difference.
-            rootView: Toast(text, systemImage: systemImage).fixedSize().padding(.space4).tint(tint)
+            rootView: Toast(text, systemImage: systemImage).fixedSize().padding(.space4)
                 .onTapGesture {
                     action?()
                     hide()

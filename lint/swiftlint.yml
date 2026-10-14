@@ -46,7 +46,7 @@ custom_rules:
     regex: '(Color\(\s*(red|hue|white|\.sRGB|#)|\.(tint|foregroundStyle|fill|stroke|strokeBorder)\(\s*(Color)?\.(red|orange|yellow|green|mint|teal|cyan|blue|indigo|purple|pink|brown)\b)'
     excluded: '.*/(Tokens|Brand)\.swift'
     excluded_match_kinds: [comment, doccomment, string]
-    message: "Use a color token: .brand (accent only), .success, .warning, .danger. Text levels: .primary, .secondary, .tertiary. The app's brand value lives in Brand.swift."
+    message: "Use a color token: .tint (the system accent: selection, primary actions), .success, .warning, .danger. Text levels: .primary, .secondary, .tertiary. An app's own color is for its icon only."
     severity: error
   direct_glass:
     name: Direct glass

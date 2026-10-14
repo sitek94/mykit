@@ -13,15 +13,13 @@ public final class SettingsWindow {
     private var window: NSWindow?
 
     /// One grouped form.
-    /// - Parameter tint: the app's brand color. A hosted window does not inherit the app's tint.
-    public init(title: String, tint: Color, @ViewBuilder content: @escaping () -> some View) {
+    public init(title: String, @ViewBuilder content: @escaping () -> some View) {
         self.title = title
         sidebar = false
         makeContent = {
             AnyView(
                 Form(content: content)
                     .formStyle(.grouped)
-                    .tint(tint)
                     .frame(width: 480)
                     .fixedSize(horizontal: false, vertical: true)
             )
@@ -29,13 +27,12 @@ public final class SettingsWindow {
     }
 
     /// A sidebar of panes; each pane is a grouped form. The window remembers the last pane while the app runs.
-    /// - Parameter tint: the app's brand color. A hosted window does not inherit the app's tint.
-    public init(title: String, tint: Color, panes: [SettingsPane]) {
+    public init(title: String, panes: [SettingsPane]) {
         self.title = title
         sidebar = true
         let selection = SettingsSelection(panes.first?.id)
         makeContent = {
-            AnyView(SettingsSidebar(panes: panes, selection: selection).tint(tint))
+            AnyView(SettingsSidebar(panes: panes, selection: selection))
         }
     }
 

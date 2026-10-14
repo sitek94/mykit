@@ -16,10 +16,10 @@ public struct Toast: View {
         } icon: {
             Image(systemName: systemImage).foregroundStyle(.success)
         }
-        .font(.textCallout.weight(.semibold))
-        .padding(.horizontal, .space4)
+        .font(.textBody.weight(.medium))
+        .padding(.horizontal, .space3)
         .padding(.vertical, .space2)
-        .controlSurface()
+        .capsuleSurface()
     }
 }
 
