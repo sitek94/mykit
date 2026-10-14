@@ -26,6 +26,8 @@ public enum AppWindows {
         track(window)
         Task {
             try? await Task.sleep(for: delay)
+            // Again, still hidden: the fitting size can be zero before the first layout (a flaky off-center Settings).
+            if !window.isVisible { window.center() }
             activate()
             window.makeKeyAndOrderFront(nil)
             NSApp.setActivationPolicy(.regular)
