@@ -31,9 +31,11 @@ open class StripPanel: FloatingPanel {
         hasShadow = false
     }
 
-    /// The strip's frame on a screen. The bottom strip stays above the Dock.
+    /// The strip's frame on a screen. The top strip stays below the menu bar, also a tall one; the bottom strip above
+    /// the Dock.
     public func frame(on screen: NSScreen) -> CGRect {
-        let y = edge == .top ? screen.frame.maxY - Self.inset - height : screen.visibleFrame.minY + Self.inset
+        let top = min(screen.frame.maxY - Self.inset, screen.visibleFrame.maxY)
+        let y = edge == .top ? top - height : screen.visibleFrame.minY + Self.inset
         return CGRect(x: screen.frame.minX + Self.inset, y: y, width: screen.frame.width - Self.inset * 2, height: height)
     }
 
@@ -71,6 +73,10 @@ open class StripPanel: FloatingPanel {
         }
         guard !hiding else { return }
         hiding = true
+        // Keys go back to the user's app at once, not after the slide: ordered out, the panel loses key; ordered in
+        // again, in the same screen update, it stays visible for the slide but takes no keys.
+        orderOut(nil)
+        orderFrontRegardless()
         NSAnimationContext.runAnimationGroup { context in
             context.duration = Self.hideDuration
             context.timingFunction = Self.curve
@@ -91,9 +97,13 @@ open class StripPanel: FloatingPanel {
     }
 
     override open func sendEvent(_ event: NSEvent) {
-        if event.type == .keyDown, keys(event) { return }
+        // While it slides out, no key acts on it.
+        if event.type == .keyDown, hiding || keys(event) { return }
         super.sendEvent(event)
     }
+
+    /// True while the strip slides out after a close.
+    public var isClosing: Bool { hiding }
 
     private static var reduceMotion: Bool { NSWorkspace.shared.accessibilityDisplayShouldReduceMotion }
 }

@@ -113,6 +113,7 @@ struct SettingsSidebar: View {
     @Bindable var selection: SettingsSelection
     /// Sets the window title to the pane's title.
     let showTitle: (String) -> Void
+    @FocusState private var sidebarFocused: Bool
 
     var body: some View {
         NavigationSplitView {
@@ -127,6 +128,7 @@ struct SettingsSidebar: View {
             .toolbar(removing: .sidebarToggle)
             .focusable()
             .focusEffectDisabled()
+            .focused($sidebarFocused)
             .onKeyPress(.upArrow) { move(by: -1) }
             .onKeyPress(.downArrow) { move(by: 1) }
         } detail: {
@@ -135,6 +137,9 @@ struct SettingsSidebar: View {
                     .formStyle(.grouped)
             }
         }
+        // The window opens with focus on the sidebar (↑ and ↓ work at once), not on a pane's first control.
+        .defaultFocus($sidebarFocused, true)
+        .onAppear { sidebarFocused = true }
         .onChange(of: selection.id, initial: true) { _, id in
             panes.first { $0.id == id }.map { showTitle($0.title) }
         }

@@ -48,8 +48,6 @@ public struct ShortcutRecorder: View {
                 .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        // As in CleanShot X: the field never takes keyboard focus, so a window opening on it shows no focus ring.
-        .focusable(false)
         // A plain button has no text baseline: give the form row the title's, so the row label lines up.
         .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + Self.baselineOffset }
         .help(recording ? "Press the new shortcut. Esc cancels, ⌫ clears." : "Change the shortcut")
