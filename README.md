@@ -14,7 +14,7 @@ Needs macOS 26 and Xcode 26.
 | Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`, one curve), text (`.textBody` 13, `.textCallout` 12 medium, `.textCaption` 11 …), status colors (`.success`, `.warning`, `.danger`), chrome fills (`.chrome(level)`: white over dark, black over light). Views use these names, never raw values. |
 | Surfaces | `.panelSurface()`, `.capsuleSurface()`, `.curtainSurface(cornerRadius:)`, `.contentSurface()`: the only place that decides where glass is used. |
 | Controls | `.pill()`, `.buttonStyle(.pill)`, `.pill(selected:)`, `.pillIcon`: the 26 pt capsule for buttons, menus and text fields. `SegmentGroup` (a tool picker), `.chip(selected:)` (filters), `.smallPrimary` (Restore, Paste), `.ghost` (an icon with no fill until hover), `.overlay` and `.overlayIcon` (light frosted buttons over an image), `.selectionRing(_:)`. |
-| `IconTile` | A white symbol on a small colored tile, as in the System Settings sidebar. |
+| `Icon`, `IconTile` | The icon library: one SF Symbol and tile color per idea (`.general`, `.shortcuts`, `.history` …), the same in every app; `IconTile` draws it as in the System Settings sidebar. `xcrun swift run IconSheet out.png` draws them all. |
 | `FloatingPanel`, `StripPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. `StripPanel`: a strip of cards along the top or bottom of the screen that slides in and out. |
 | `OverlayPanel` | A panel that never takes focus: thumbnails, toasts, previews. |
 | `AppWindows` | `show(window, size:)`: an app window centered, in front of all apps, with a Dock icon while open. `activate()`: take focus before an alert or a save panel. |

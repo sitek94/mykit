@@ -14,5 +14,7 @@ let package = Package(
     targets: [
         .target(name: "MyKit", swiftSettings: [.defaultIsolation(MainActor.self)]),
         .testTarget(name: "MyKitTests", dependencies: ["MyKit"], swiftSettings: [.defaultIsolation(MainActor.self)]),
+        // `xcrun swift run IconSheet [out.png]`: every Icon on its tile, in light and dark, for review. Not a product.
+        .executableTarget(name: "IconSheet", dependencies: ["MyKit"], swiftSettings: [.defaultIsolation(MainActor.self)]),
     ]
 )

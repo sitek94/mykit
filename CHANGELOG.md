@@ -9,7 +9,8 @@ Breaking: one design system for all the apps, from a study of CleanShot X's look
 - Controls: the pill is a 26 pt capsule on a chrome fill; `SegmentGroup`, `.chip(selected:)`, `.smallPrimary`, `.ghost`, `.overlay` / `.overlayIcon` (AppKit's light frost over an image), `.selectionRing(_:)`.
 - Surfaces: `.capsuleSurface()` and `.curtainSurface(cornerRadius:)`; `controlSurface` and `controlBackdrop` are gone.
 - `StripPanel`: a strip of cards along the top or bottom of the screen, 40 pt in, that slides in and out; it can close at once before a paste. `FloatingPanel.dismiss` is open.
-- `SettingsWindow(panes:)`: a sidebar like System Settings: `IconTile` colored tiles (`SettingsPane(_:systemImage:tint:)`), 36 pt rows, About at the bottom, ↑ and ↓, the pane title in the toolbar, 810 × 660. `show(pane:)` opens a pane.
+- `Icon`: a library of icons (an SF Symbol and a tile color per idea), extendable by apps; `IconTile` draws one: a semibold white glyph, centered by its own outline, on a deep gradient tile. `IconSheet` draws the whole library.
+- `SettingsWindow(panes:)`: a sidebar like System Settings: colored tiles (`SettingsPane(_:icon:)`), 36 pt rows, About at the bottom, ↑ and ↓, the pane title in the toolbar, 810 × 660. `show(pane:)` opens a pane.
 - `ShortcutRecorder` is a key field: the keys on a light fill, "Record Shortcut" when empty, the clear button on hover. It takes no keyboard focus.
 - `PanelMenu` (was `GearMenu`): a "•••" ghost button.
 - `AppWindows.show(_:size:)` takes a first size for a window whose content fills the title bar, and centers the window again just before it first shows.

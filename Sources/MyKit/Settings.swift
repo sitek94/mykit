@@ -78,18 +78,14 @@ public final class SettingsWindow {
 public struct SettingsPane: Identifiable {
     public let id: String
     let title: String
-    let systemImage: String
-    let tint: IconTile.Tint
+    let icon: Icon
     let content: () -> AnyView
 
-    /// - Parameters:
-    ///   - systemImage: an SF Symbol for the row's tile.
-    ///   - tint: the tile color. Gray for General, Shortcuts and About; a color for the app's own panes.
-    public init(_ title: String, systemImage: String, tint: IconTile.Tint, @ViewBuilder content: @escaping () -> some View) {
+    /// - Parameter icon: the row's tile, from the `Icon` library (`.general`, `.shortcuts`, `.about` …).
+    public init(_ title: String, icon: Icon, @ViewBuilder content: @escaping () -> some View) {
         id = title
         self.title = title
-        self.systemImage = systemImage
-        self.tint = tint
+        self.icon = icon
         self.content = { AnyView(content()) }
     }
 }
@@ -172,7 +168,7 @@ private struct SettingsRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: Self.titleGap) {
-                IconTile(systemImage: pane.systemImage, tint: pane.tint)
+                IconTile(pane.icon)
                 Text(pane.title).font(.textBody)
                 Spacer(minLength: 0)
             }
