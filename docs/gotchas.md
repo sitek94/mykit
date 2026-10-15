@@ -49,3 +49,11 @@ Traps hit while building macOS 26 apps with SwiftPM and SwiftUI + AppKit: sympto
 - **Testing the real app on a Mac someone is using.** A separate signed driver app (`my<App>Driver`) holds Screen Recording and Accessibility, runs as one long-lived process fed by a command queue, and accepts fixed verbs only.
 - **Safe mode.** Keys and clicks go to the app only (`CGEvent.postToPid`); screenshots capture the app's windows only (ScreenCaptureKit); synthetic data comes from a scratch data directory; capture is paused; test hooks sit behind a launch flag. System-wide events only with the user's go-ahead and hands off the Mac.
 - **Posted clicks do not reach SwiftUI buttons.** Cover clicks in a hands-off end-to-end run.
+
+## Icons and lines at 1x
+
+- **Small icons look thin and blurry on a non-Retina screen.** An SF Symbol (or any outline icon set) scaled to 11–14 pt draws 1 px gray lines, whatever the weight. Use `ControlGlyph` for control icons: shapes drawn in code with 2 pt strokes on whole pixels. Keep SF Symbols for tiles, menus and lists (`IconTile`).
+- **A glyph is blurry in one direction only.** Its box and its container have a different odd/even width, so it is centered on half a pixel (a 12 pt glyph in a 35 pt segment). Give them the same parity.
+- **A thin border fades along the straight edges and looks bright on the curves.** A 0.5 pt line on a 1x screen is half a pixel. Draw `1 / displayScale` wide (and halve the opacity on 1x to keep the same weight).
+- **An SVG icon's stroke width does not change.** macOS's SVG renderer ignores `stroke-width` edits; outline icon sets cannot be made heavier that way. Draw the shape as a SwiftUI `Path` instead.
+
