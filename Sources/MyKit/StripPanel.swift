@@ -1,8 +1,8 @@
 import AppKit
 import SwiftUI
 
-/// A strip along the top or bottom of the screen for a row of cards, as CleanShot X's Capture History: 40 pt from the
-/// screen's edge and sides, 240 pt tall by default, no shadow. It slides in from its edge while it fades in, and back
+/// A strip along the top or bottom of the screen for a row of cards (a capture history, a clipboard shelf): 40 pt from
+/// the screen's edge and sides, 240 pt tall by default, no shadow. It slides in from its edge while it fades in, and back
 /// out when it closes; with Reduce Motion it only fades. The content draws its own surface: `.panelSurface()`.
 open class StripPanel: FloatingPanel {
     public enum Edge: Sendable {

@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.5.1 — 2026-10-15
+
+- `ControlGlyph`: small control icons drawn in code (cursor, arrow, line, chevron, copy, close, pencil): solid shapes and 2 pt round strokes on whole-pixel lines, crisp at 1x where a scaled SF Symbol turns into a gray 1 px line. `SegmentGroup.Item(_:title:glyph:)` takes one.
+- `IconGlyph`: an SF Symbol, filled and semibold, fitted to a fixed box (`.tool` 11, `.control` 14, `.overlay` 9) and centered by its own outline, for icons `ControlGlyph` does not have.
+
 ## 0.5.0 — 2026-10-15
 
-Breaking: one design system for all the apps, from a study of CleanShot X's look. The system accent replaces the per-app tint.
+Breaking: one design system for all the apps. The system accent replaces the per-app tint.
 
 - The system accent color for selection and primary actions; the `tint:` parameters of `SettingsWindow`, `FloatingPanel.setContent` and `ToastPanel` are gone. An app's own color is for its icon only.
 - Tokens: 26 pt controls, radii 20 / 12 / 9 / 6 and `radiusThumbnail` 17, macOS text sizes (13 body, 12 medium callout, 11 caption), one motion curve, `.chrome(level)` fills.
@@ -42,7 +47,7 @@ Breaking: text tokens are one step larger, `GearMenu` uses the pill style, and `
 
 ## 0.2.1 — 2026-10-13
 
-- `AppWindows.show`: shows an app window as CleanShot X does. It centers the window on every show, brings it to the front of all apps, and shows a Dock icon while the window is open.
+- `AppWindows.show`: shows an app window the same way everywhere. It centers the window on every show, brings it to the front of all apps, and shows a Dock icon while the window is open.
 - `SettingsWindow` uses it. Settings opened from the menu bar no longer stays behind the active app. It opens on the current Space, and Esc closes it.
 
 ## 0.2.0 — 2026-10-12

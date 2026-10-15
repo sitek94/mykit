@@ -1,7 +1,7 @@
 import AppKit
 
-/// Shows a menu bar app's own windows (Settings, an editor) as CleanShot X does: centered on every show, in front of
-/// all other apps, with a Dock icon while any of them is open.
+/// Shows a menu bar app's own windows (Settings, an editor): centered on every show, in front of all other apps,
+/// with a Dock icon while any of them is open.
 ///
 /// A menu bar app cannot take focus with `NSApp.activate()` on macOS 26: activation is cooperative, and the active app
 /// does not give it up. So the window shows a moment after the status menu closes, the app becomes a regular app, and

@@ -120,3 +120,34 @@ public struct IconTile: View {
             .accessibilityHidden(true)
     }
 }
+
+/// An SF Symbol as a control icon: filled where the symbol has a filled form, semibold, scaled to fit a fixed box and
+/// centered by its own outline, so every icon in a row has the same visual size.
+public struct IconGlyph: View {
+    /// Box sizes: a tool in a segment group, an icon button in a bar, an icon over an image (a thumbnail's corners).
+    public static let tool: CGFloat = 11
+    public static let control: CGFloat = 14
+    public static let overlay: CGFloat = 9
+
+    let systemImage: String
+    let size: CGFloat
+    let filled: Bool
+    let weight: Font.Weight
+
+    /// - Parameter weight: heavier for a thin symbol that must read on its own at a small size (×, a pencil).
+    public init(_ systemImage: String, size: CGFloat = IconGlyph.control, filled: Bool = true, weight: Font.Weight = .semibold) {
+        self.systemImage = systemImage
+        self.size = size
+        self.filled = filled
+        self.weight = weight
+    }
+
+    public var body: some View {
+        Image(systemName: systemImage)
+            .resizable()
+            .scaledToFit()
+            .symbolVariant(filled ? .fill : .none)
+            .fontWeight(weight)
+            .frame(width: size, height: size)
+    }
+}

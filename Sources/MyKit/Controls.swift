@@ -140,7 +140,8 @@ public struct SegmentGroup<Value: Hashable>: View {
     public struct Item: Identifiable {
         public let value: Value
         public let title: String
-        public let systemImage: String
+        public let systemImage: String?
+        public let glyph: ControlGlyph?
         /// The tooltip, for example the name and the key that picks it.
         public let help: String
         public var id: Value { value }
@@ -149,6 +150,16 @@ public struct SegmentGroup<Value: Hashable>: View {
             self.value = value
             self.title = title
             self.systemImage = systemImage
+            glyph = nil
+            self.help = help ?? title
+        }
+
+        /// A tool drawn by myKit, crisp at 1x (`ControlGlyph`).
+        public init(_ value: Value, title: String, glyph: ControlGlyph, help: String? = nil) {
+            self.value = value
+            self.title = title
+            systemImage = nil
+            self.glyph = glyph
             self.help = help ?? title
         }
     }
@@ -171,7 +182,8 @@ public struct SegmentGroup<Value: Hashable>: View {
                         .fill(.separator.opacity(separatorVisible(before: index) ? 0.4 : 0))
                         .frame(width: 1, height: SegmentMetrics.separatorHeight)
                 }
-                SegmentButton(title: item.title, systemImage: item.systemImage, help: item.help, selected: item.value == selection) {
+                SegmentButton(title: item.title, systemImage: item.systemImage, glyph: item.glyph, help: item.help, selected: item.value == selection)
+                {
                     selection = item.value
                 }
             }
@@ -200,7 +212,8 @@ private enum SegmentMetrics {
 
 private struct SegmentButton: View {
     let title: String
-    let systemImage: String
+    let systemImage: String?
+    let glyph: ControlGlyph?
     let help: String
     let selected: Bool
     let action: () -> Void
@@ -210,9 +223,11 @@ private struct SegmentButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: systemImage)
-                .frame(width: SegmentMetrics.width, height: SegmentMetrics.height)
-                .contentShape(.rect)
+            Group {
+                if let glyph { glyph } else { IconGlyph(systemImage ?? "questionmark", size: IconGlyph.tool) }
+            }
+            .frame(width: SegmentMetrics.width, height: SegmentMetrics.height)
+            .contentShape(.rect)
         }
         .buttonStyle(SegmentStyle(selected: selected, hovering: hovering, active: active, dark: scheme == .dark))
         .onHover { hovering = $0 }
