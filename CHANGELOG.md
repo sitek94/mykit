@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (0.5.0)
+## 0.5.0 — 2026-10-15
 
 Breaking: one design system for all the apps, from a study of CleanShot X's look. The system accent replaces the per-app tint.
 
