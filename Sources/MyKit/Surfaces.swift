@@ -7,6 +7,15 @@ extension View {
         glassEffect(.regular, in: .rect(cornerRadius: .radiusPanel))
     }
 
+    /// A `StripPanel` sheet: a glass panel 8 pt in from the screen's edge and sides, with a soft shadow in that margin.
+    /// The margin also keeps the panel clear of the window's own rounded corners.
+    public func sheetSurface(edge: StripPanel.Edge) -> some View {
+        glassEffect(.regular, in: .rect(cornerRadius: .radiusPanel))
+            .shadow(color: .black.opacity(0.25), radius: 6)
+            .padding(.horizontal, .space2)
+            .padding(edge == .bottom ? .bottom : .top, .space2)
+    }
+
     /// Toasts and notices: a frosted capsule.
     public func capsuleSurface() -> some View {
         glassEffect(.regular, in: .capsule)

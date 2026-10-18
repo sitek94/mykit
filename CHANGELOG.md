@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 — 2026-10-18
+
+- `StripPanel(placement: .sheet)`: a full-width sheet on the screen's edge, over the Dock (main-menu level). The window stays put and the content slides in (0.15 s) and out (0.2 s), so nothing shows on a display next to that edge. `.inset` (the default) is the strip as before.
+- `.sheetSurface(edge:)`: a glass panel 8 pt in from the edge and sides, with a soft shadow.
+- `DragSource`: drags out of a window without taking its clicks (SwiftUI keeps taps, double-clicks and menus); several items drag as a pile with the system count badge; callbacks when the pointer leaves the window and when the drag ends; `contentPoint(_:)` turns the press point into SwiftUI's coordinates.
+
 ## 0.5.1 — 2026-10-15
 
 - `ControlGlyph`: small control icons drawn in code (cursor, arrow, line, chevron, copy, close, pencil): solid shapes and 2 pt round strokes on whole-pixel lines, crisp at 1x where a scaled SF Symbol turns into a gray 1 px line. `SegmentGroup.Item(_:title:glyph:)` takes one.

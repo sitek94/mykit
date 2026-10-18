@@ -98,3 +98,39 @@ struct TokenUsage: View {
         .animation(.quick, value: 0)
     }
 }
+
+struct StripPanelFrameTests {
+    // A 1440 pt tall screen with a 33 pt menu bar and a 70 pt Dock at the bottom.
+    let screen = CGRect(x: 0, y: 0, width: 2560, height: 1440)
+    let visible = CGRect(x: 0, y: 70, width: 2560, height: 1337)
+
+    @Test func bottomSheetSpansTheScreenOnItsEdgeOverTheDock() {
+        let frame = StripPanel.frame(edge: .bottom, placement: .sheet, height: 300, screen: screen, visible: visible)
+        #expect(frame == CGRect(x: 0, y: 0, width: 2560, height: 300))
+    }
+
+    @Test func topSheetSitsUnderTheMenuBar() {
+        let frame = StripPanel.frame(edge: .top, placement: .sheet, height: 300, screen: screen, visible: visible)
+        #expect(frame == CGRect(x: 0, y: 1107, width: 2560, height: 300))
+    }
+
+    @Test func insetBottomStripStaysAboveTheDock() {
+        let frame = StripPanel.frame(edge: .bottom, placement: .inset, height: 240, screen: screen, visible: visible)
+        #expect(frame == CGRect(x: 40, y: 110, width: 2480, height: 240))
+    }
+}
+
+struct DragSourceTests {
+    @Test func largePicturesShrinkToTheLimitKeepingTheirShape() {
+        #expect(DragSource.fitted(CGSize(width: 960, height: 480)) == CGSize(width: 240, height: 120))
+        #expect(DragSource.fitted(CGSize(width: 90, height: 600)) == CGSize(width: 36, height: 240))
+    }
+
+    @Test func aPointNearTheWindowBottomIsNearTheContentBottom() {
+        #expect(DragSource.topLeft(CGPoint(x: 10, y: 5), height: 240) == CGPoint(x: 10, y: 235))
+    }
+
+    @Test func smallPicturesKeepTheirSize() {
+        #expect(DragSource.fitted(CGSize(width: 64, height: 64)) == CGSize(width: 64, height: 64))
+    }
+}

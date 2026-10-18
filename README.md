@@ -12,10 +12,11 @@ Needs macOS 26 and Xcode 26.
 | Part | What it does |
 | --- | --- |
 | Tokens | Spacing (`.space1`–`.space8`), corner radii (`.radiusPanel` …), motion (`.quick`, `.standard`, one curve), text (`.textBody` 13, `.textCallout` 12 medium, `.textCaption` 11 …), status colors (`.success`, `.warning`, `.danger`), chrome fills (`.chrome(level)`: white over dark, black over light). Views use these names, never raw values. |
-| Surfaces | `.panelSurface()`, `.capsuleSurface()`, `.curtainSurface(cornerRadius:)`, `.contentSurface()`: the only place that decides where glass is used. |
+| Surfaces | `.panelSurface()`, `.sheetSurface(edge:)`, `.capsuleSurface()`, `.curtainSurface(cornerRadius:)`, `.contentSurface()`: the only place that decides where glass is used. |
 | Controls | `.pill()`, `.buttonStyle(.pill)`, `.pill(selected:)`, `.pillIcon`: the 26 pt capsule for buttons, menus and text fields. `SegmentGroup` (a tool picker), `.chip(selected:)` (filters), `.smallPrimary` (Restore, Paste), `.ghost` (an icon with no fill until hover), `.overlay` and `.overlayIcon` (light frosted buttons over an image), `.selectionRing(_:)`. |
 | `Icon`, `IconTile` | The icon library: one SF Symbol and tile color per idea (`.general`, `.shortcuts`, `.history` …), the same in every app; `IconTile` draws it as in the System Settings sidebar. `xcrun swift run IconSheet out.png` draws them all. |
-| `FloatingPanel`, `StripPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. `StripPanel`: a strip of cards along the top or bottom of the screen that slides in and out. |
+| `FloatingPanel`, `StripPanel` | A panel that takes typing without activating the app; closes on Esc, a click outside or an app switch. `StripPanel`: a strip of cards along the top or bottom of the screen that slides in and out: inset 40 pt (`.inset`), or a full-width sheet on the edge, over the Dock, its panel 8 pt in (`.sheet`). |
+| `DragSource`, `DragItem` | Drags out of a window without taking its clicks: a press that moves 3 pt drags what you return for that point. Several items drag as a pile with a count. |
 | `OverlayPanel` | A panel that never takes focus: thumbnails, toasts, previews. |
 | `AppWindows` | `show(window, size:)`: an app window centered, in front of all apps, with a Dock icon while open. `activate()`: take focus before an alert or a save panel. |
 | `GlobalShortcut`, `ShortcutRecorder` | System-wide shortcuts the user can change in Settings, in a key field. Hyper (all four modifiers) shows as ✦. |
