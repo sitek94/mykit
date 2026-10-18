@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 — 2026-10-18
+
+- `DragSource.onPress`: called right after a press in the window, to get a drag ready before it starts.
+
 ## 0.6.0 — 2026-10-18
 
 - `StripPanel(placement: .sheet)`: a full-width sheet on the screen's edge, over the Dock (main-menu level). The window stays put and the content slides in (0.15 s) and out (0.2 s), so nothing shows on a display next to that edge. `.inset` (the default) is the strip as before.

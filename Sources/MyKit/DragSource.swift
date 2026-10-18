@@ -18,6 +18,9 @@ public struct DragItem {
 public final class DragSource: NSObject, NSDraggingSource {
     /// The items for a press at this point, in the window's coordinates; empty when nothing there can be dragged.
     public var items: (CGPoint) -> [DragItem] = { _ in [] }
+    /// A press in the window, right after the window handled it: time to get a drag ready (read data, draw pictures),
+    /// so that a drag starts at once when the press moves.
+    public var onPress: (CGPoint) -> Void = { _ in }
     /// The pointer left the window during a drag, once per drag: a panel can step aside for the drop target.
     public var onLeaveWindow: () -> Void = {}
     /// A drag ended; true when something took the drop.
@@ -54,6 +57,8 @@ public final class DragSource: NSObject, NSDraggingSource {
         switch event.type {
         case .leftMouseDown:
             press = event
+            let point = event.locationInWindow
+            DispatchQueue.main.async { [weak self] in self?.onPress(point) }
         case .leftMouseUp:
             press = nil
         case .leftMouseDragged:
