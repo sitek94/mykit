@@ -51,6 +51,9 @@ open class StripPanel: FloatingPanel {
         self.height = height
         super.init(options: options)
         hasShadow = false
+        // The strip animates itself. The system's own order-out / order-in animation made it jump and fade when it
+        // gave keys back at the start of a close.
+        animationBehavior = .none
         if placement == .sheet {
             // Above the Dock, which the bottom sheet covers.
             level = .mainMenu
@@ -75,10 +78,13 @@ open class StripPanel: FloatingPanel {
         }
     }
 
-    /// A sheet hosts its content in a container, so the content can slide while the window stays put.
+    /// A sheet hosts its content in a container, so the content can slide while the window stays put. Controls keep
+    /// their active look: an inset strip gives up key at the start of a close, and selected controls would turn gray
+    /// while it slides out.
     override public func setContent(@ViewBuilder _ content: () -> some View) {
-        guard placement == .sheet else { return super.setContent(content) }
-        let host = NSHostingView(rootView: AnyView(content()))
+        let content = content().environment(\.controlActiveState, .key)
+        guard placement == .sheet else { return super.setContent { content } }
+        let host = NSHostingView(rootView: AnyView(content))
         host.sizingOptions = []
         host.autoresizingMask = [.width, .height]
         let container = NSView()
@@ -136,10 +142,14 @@ open class StripPanel: FloatingPanel {
         }
         guard !hiding else { return }
         hiding = true
-        // Keys go back to the user's app at once, not after the slide: ordered out, the panel loses key; ordered in
-        // again, in the same screen update, it stays visible for the slide but takes no keys.
-        orderOut(nil)
-        orderFrontRegardless()
+        // An inset strip gives keys back to the user's app at once, not after the slide: ordered out, it loses key;
+        // ordered in again, in the same screen update, it stays visible for the slide but takes no keys. A sheet
+        // keeps key for its short slide: ordered out and in, its full-width glass flashed. Keys during a slide are
+        // ignored (`sendEvent`).
+        if sheetContent == nil {
+            orderOut(nil)
+            orderFrontRegardless()
+        }
         NSAnimationContext.runAnimationGroup { context in
             if let sheetContent {
                 context.duration = Self.sheetHideDuration

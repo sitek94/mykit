@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.2 — 2026-10-19
+
+- `StripPanel` closes without a jump or a fade: the system's window animation is off, so only its own slide shows. A sheet keeps key while it slides out (0.2 s; keys in that time are ignored): giving key back at once made its glass flash.
+- `StripPanel` content keeps the active look while it slides out (selected controls turned gray when it gave up key).
+
 ## 0.6.1 — 2026-10-18
 
 - `DragSource.onPress`: called right after a press in the window, to get a drag ready before it starts.
